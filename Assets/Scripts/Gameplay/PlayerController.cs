@@ -47,6 +47,7 @@ namespace Gameplay.Player
 			inputs.Player.Movement.performed += OnMove;
 			inputs.Player.Movement.canceled += OnStopMove;
 			inputs.Player.Jump.performed += OnJump;
+			inputs.Player.Jump.canceled += OnJumpReleased;
 			inputs.Player.Run.performed += OnRun;
 			inputs.Player.Run.canceled += OnStopRun;
 			inputs.Player.Crouch.started += OnCrouch;
@@ -77,7 +78,7 @@ namespace Gameplay.Player
 				case State.EXECUTE:
 					break;
 			}
-			Debug.Log(currentState);
+			//Debug.Log(currentState);
 		}
 
 		#region Inputs
@@ -101,6 +102,7 @@ namespace Gameplay.Player
 
 		private void OnJump(InputAction.CallbackContext ctx)
 		{
+			playerMovement.JumpPressed = true;
 			if (playerMovement.IsGrounded())
 			{
 				if (isCrouched)
@@ -116,8 +118,15 @@ namespace Gameplay.Player
 			}
 		}
 
+		private void OnJumpReleased(InputAction.CallbackContext ctx)
+		{
+			playerMovement.JumpPressed = false;
+		}
+
 		private void OnRun(InputAction.CallbackContext ctx)
 		{
+			if (isCrouched && !playerMovement.CanGetUp()) return;
+
 			isRunning = true;
 
 			if (isCrouched)
@@ -136,7 +145,15 @@ namespace Gameplay.Player
 			if (!isCrouched)
 			{
 				isCrouched = true;
-				playerMovement.GetDown();
+				// Slide
+				if (isRunning)
+				{
+					playerMovement.Slide();
+				}
+				else
+				{
+					playerMovement.GoDown();
+				}
 			}
 			else if (playerMovement.CanGetUp())
 			{

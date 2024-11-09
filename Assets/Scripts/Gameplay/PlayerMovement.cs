@@ -39,7 +39,13 @@ namespace Gameplay.Player
 		[SerializeField]
 		float climbingTime;
 		[SerializeField]
-		AnimationCurve climbingCurve;
+		float climbingEndJump;
+
+		[Header("Sliding")]
+		[SerializeField]
+		float slideDuration;
+		[SerializeField]
+		float slideStrength;
 
 		[Header("Gound Check")]
 		[SerializeField]
@@ -62,6 +68,9 @@ namespace Gameplay.Player
 		bool canMove;
 		public bool CanMove { get => canMove; set => canMove = value; }
 
+		bool jumpPressed;
+		public bool JumpPressed { get => jumpPressed; set => jumpPressed = value; }
+
 		float currentSpeed;
 
 		CapsuleCollider capCollider;
@@ -71,10 +80,15 @@ namespace Gameplay.Player
 		RaycastHit climbHit;
 		Coroutine climbCoroutine;
 		bool isClimbing;
+		[SerializeField]
+		bool canClimb; // To avoid climbing loop
+
+		Coroutine slideCoroutine;
 
 		private void Awake()
 		{
 			canMove = true;
+			canClimb = true;
 			rb = GetComponent<Rigidbody>();
 			capCollider = GetComponent<CapsuleCollider>();
 			Physics.gravity = Vector3.down * gravity;
@@ -85,6 +99,21 @@ namespace Gameplay.Player
 		{
 			rb.drag = IsGrounded() ? groundDrag : 0f;
 			SpeedControl();
+
+			//if(IsGrounded())
+			//{
+			//	canClimb = true;
+			//}
+
+			// Check for climbable ledges
+			if (jumpPressed)
+			{
+				// Check for Climbing
+				if (Physics.Raycast(climbOriginTransform.position, Vector3.down, out climbHit, climbRayLength, groundLayer))
+				{
+					Climb();
+				}
+			}
 		}
 
 		void FixedUpdate()
@@ -138,7 +167,7 @@ namespace Gameplay.Player
 			currentSpeed = crouchSpeed;
 		}
 
-		public void GetDown()
+		public void GoDown()
 		{
 			capCollider.height = crouchYScale;
 		}
@@ -150,6 +179,7 @@ namespace Gameplay.Player
 
 		private void OnDrawGizmos()
 		{
+			//if (!isClimbing) return;
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawLine(climbOriginTransform.position, climbOriginTransform.position + Vector3.down * climbRayLength);
 
@@ -159,13 +189,6 @@ namespace Gameplay.Player
 
 		public void Jump()
 		{
-			// Check for Climbing
-			if(Physics.Raycast(climbOriginTransform.position, Vector3.down, out climbHit, climbRayLength, groundLayer))
-			{
-				Climb();
-			}
-
-			//Normal Jump
 			exitingSlope = true;
 			rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 			rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -174,16 +197,38 @@ namespace Gameplay.Player
 
 		public void Climb()
 		{
-			canMove = false;
-
 			if (isClimbing) return;
 
+			canMove = false;
+
 			isClimbing = true;
+			canClimb = false;
 			if(climbCoroutine != null)
 			{
 				StopCoroutine(climbCoroutine);
 			}
 			climbCoroutine = StartCoroutine(ClimbCoroutine());
+		}
+
+		private IEnumerator ClimbCoroutine()
+		{
+			float elapsedTime = 0f;
+			rb.useGravity = false;
+
+			Vector3 startPos = transform.position;
+			Vector3 targetPos = new Vector3(transform.position.x, climbHit.point.y + climbingEndJump, transform.position.z);
+
+			while (elapsedTime < climbingTime)
+			{
+				elapsedTime += Time.deltaTime;
+				transform.position = Vector3.Slerp(startPos, targetPos, elapsedTime / climbingTime);
+				yield return null;
+			}
+
+			transform.position = targetPos;
+			canMove = true;
+			rb.useGravity = true;
+			isClimbing = false;
 		}
 
 		public bool IsGrounded()
@@ -194,6 +239,29 @@ namespace Gameplay.Player
 		public bool CanGetUp()
 		{
 			return !Physics.Raycast(transform.position, Vector3.up, playerHeight + getUpRange);
+		}
+
+		public void Slide()
+		{
+			GoDown();
+			if(slideCoroutine != null)
+			{
+				StopCoroutine(slideCoroutine);
+			}
+			slideCoroutine = StartCoroutine(SlideCoroutine());
+		}
+
+		private IEnumerator SlideCoroutine()
+		{
+			float elapsedTime = 0f;
+			float diminishingStrength = slideStrength;
+			while(elapsedTime < slideDuration)
+			{
+				rb.AddForce(moveDirection.normalized * diminishingStrength, ForceMode.VelocityChange);
+				diminishingStrength = Mathf.Lerp(diminishingStrength, crouchSpeed, elapsedTime / slideDuration);
+				elapsedTime += Time.deltaTime;
+				yield return null;
+			}
 		}
 
 		private bool OnSlope()
@@ -232,27 +300,6 @@ namespace Gameplay.Player
 		private void OnJumpEnd()
 		{
 			exitingSlope = false;
-		}
-
-		private IEnumerator ClimbCoroutine()
-		{
-			float elapsedTime = 0f;
-			rb.useGravity = false;
-
-			Vector3 startPos = transform.position;
-			Vector3 targetPos = new Vector3(transform.position.x, climbHit.point.y, transform.position.z);
-
-			while(elapsedTime < climbingTime)
-			{
-				elapsedTime += Time.deltaTime;
-				transform.position = Vector3.Slerp(startPos, targetPos, elapsedTime / climbingTime);
-				yield return null;
-			}
-
-			transform.position = targetPos;
-			canMove = true;
-			rb.useGravity = true;
-			isClimbing = false;
 		}
 	}
 }
