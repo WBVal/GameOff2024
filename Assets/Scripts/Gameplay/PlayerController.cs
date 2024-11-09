@@ -111,6 +111,7 @@ namespace Gameplay.Player
 					{
 						isCrouched = false;
 						playerMovement.GetUp();
+						playerCamera.OnCrouchEnd();
 					}
 				}
 
@@ -130,7 +131,10 @@ namespace Gameplay.Player
 			isRunning = true;
 
 			if (isCrouched)
+			{
+				playerCamera.OnCrouchEnd();
 				playerMovement.GetUp();
+			}
 
 			isCrouched = false;
 		}
@@ -138,17 +142,20 @@ namespace Gameplay.Player
 		private void OnStopRun(InputAction.CallbackContext ctx)
 		{
 			isRunning = false;
+			playerCamera.OnSprintEnd();
 		}
 
 		private void OnCrouch(InputAction.CallbackContext ctx)
 		{
 			if (!isCrouched)
 			{
+				playerCamera.OnCrouchBegin();
 				isCrouched = true;
 				// Slide
 				if (isRunning)
 				{
 					playerMovement.Slide();
+					playerCamera.OnSprintEnd();
 				}
 				else
 				{
@@ -158,6 +165,7 @@ namespace Gameplay.Player
 			else if (playerMovement.CanGetUp())
 			{
 				isCrouched = false;
+				playerCamera.OnCrouchEnd();
 				playerMovement.GetUp();
 			}
 
@@ -203,6 +211,7 @@ namespace Gameplay.Player
 		private void Run()
 		{
 			playerMovement.Run();
+			playerCamera.OnSprintBegin();
 		}
 
 		private void Crouch()

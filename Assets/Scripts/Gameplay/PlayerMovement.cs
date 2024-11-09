@@ -80,15 +80,12 @@ namespace Gameplay.Player
 		RaycastHit climbHit;
 		Coroutine climbCoroutine;
 		bool isClimbing;
-		[SerializeField]
-		bool canClimb; // To avoid climbing loop
 
 		Coroutine slideCoroutine;
 
 		private void Awake()
 		{
 			canMove = true;
-			canClimb = true;
 			rb = GetComponent<Rigidbody>();
 			capCollider = GetComponent<CapsuleCollider>();
 			Physics.gravity = Vector3.down * gravity;
@@ -202,7 +199,6 @@ namespace Gameplay.Player
 			canMove = false;
 
 			isClimbing = true;
-			canClimb = false;
 			if(climbCoroutine != null)
 			{
 				StopCoroutine(climbCoroutine);

@@ -458,7 +458,7 @@ MonoBehaviour:
   getUpRange: -0.3
   climbOriginTransform: {fileID: 1052177726}
   climbRayLength: 1
-  climbingTime: 0.3
+  climbingTime: 0.5
   climbingEndJump: 2
   slideDuration: 10
   slideStrength: 6
@@ -468,7 +468,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   maxSlopeAngle: 45
-  canClimb: 0
 --- !u!114 &305396644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,9 +480,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 921225520390b3144aaaa2844a106370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraTransform: {fileID: 842339978}
+  m_Camera: {fileID: 842339979}
   sensX: 10
   sensY: 10
+  fovChangeDuration: 0.3
+  baseFOV: 60
+  fastFOV: 80
+  vignetteChangeDuration: 0.3
+  volume: {fileID: 832575518}
+  crouchVignetteSmoothness: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
