@@ -54,8 +54,6 @@ namespace Gameplay.Player
 		float groundDrag;
 		[SerializeField]
 		LayerMask groundLayer;
-		Rigidbody rb;
-		Vector3 moveDirection;
 
 		[Header("Slope Handling")]
 		[SerializeField]
@@ -71,6 +69,9 @@ namespace Gameplay.Player
 		bool jumpPressed;
 		public bool JumpPressed { get => jumpPressed; set => jumpPressed = value; }
 
+		Rigidbody rb;
+		Vector3 moveDirection;
+
 		float currentSpeed;
 
 		CapsuleCollider capCollider;
@@ -83,11 +84,14 @@ namespace Gameplay.Player
 
 		Coroutine slideCoroutine;
 
+		PlayerAnimationController playerAnimationController;
+
 		private void Awake()
 		{
 			canMove = true;
 			rb = GetComponent<Rigidbody>();
 			capCollider = GetComponent<CapsuleCollider>();
+			playerAnimationController = GetComponent<PlayerAnimationController>();
 			Physics.gravity = Vector3.down * gravity;
 			startYScale = capCollider.height;
 		}
@@ -97,11 +101,6 @@ namespace Gameplay.Player
 			rb.drag = IsGrounded() ? groundDrag : 0f;
 			SpeedControl();
 
-			//if(IsGrounded())
-			//{
-			//	canClimb = true;
-			//}
-
 			// Check for climbable ledges
 			if (jumpPressed)
 			{
@@ -109,6 +108,7 @@ namespace Gameplay.Player
 				if (Physics.Raycast(climbOriginTransform.position, Vector3.down, out climbHit, climbRayLength, groundLayer))
 				{
 					Climb();
+					playerAnimationController.Climb();
 				}
 			}
 		}

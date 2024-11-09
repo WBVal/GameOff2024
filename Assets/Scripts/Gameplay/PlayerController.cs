@@ -32,12 +32,14 @@ namespace Gameplay.Player
 
 		PlayerMovement playerMovement;
 		PlayerCamera playerCamera;
+		PlayerAnimationController playerAnimationController;
 
 		private void Awake()
 		{
 			inputs = new PlayerInputs();
 			playerMovement = GetComponent<PlayerMovement>();
 			playerCamera = GetComponent<PlayerCamera>();
+			playerAnimationController = GetComponent<PlayerAnimationController>();
 		}
 
 		private void OnEnable()
@@ -78,7 +80,7 @@ namespace Gameplay.Player
 				case State.EXECUTE:
 					break;
 			}
-			//Debug.Log(currentState);
+			Debug.Log(currentState);
 		}
 
 		#region Inputs
@@ -116,6 +118,7 @@ namespace Gameplay.Player
 				}
 
 				playerMovement.Jump();
+				playerAnimationController.Jump();
 			}
 		}
 
@@ -147,6 +150,8 @@ namespace Gameplay.Player
 
 		private void OnCrouch(InputAction.CallbackContext ctx)
 		{
+			if (!playerMovement.IsGrounded()) return;
+
 			if (!isCrouched)
 			{
 				playerCamera.OnCrouchBegin();
@@ -155,6 +160,7 @@ namespace Gameplay.Player
 				if (isRunning)
 				{
 					playerMovement.Slide();
+					playerAnimationController.Slide();
 					playerCamera.OnSprintEnd();
 				}
 				else
@@ -191,32 +197,34 @@ namespace Gameplay.Player
 			if (moveDir == Vector2.zero)
 			{
 				currentState = State.IDLE;
-				return;
 			}
-
-			if (isRunning) currentState = State.RUN;
 			else if (isCrouched) currentState = State.CROUCH;
+			else if (isRunning) currentState = State.RUN;
 			else currentState = State.WALK;
 		}
 		private void Idle()
 		{
 			playerMovement.Stop();
+			playerAnimationController.Idle();
 		}
 
 		private void Walk()
 		{
 			playerMovement.Walk();
+			playerAnimationController.Walk();
 		}
 
 		private void Run()
 		{
 			playerMovement.Run();
 			playerCamera.OnSprintBegin();
+			playerAnimationController.Run();
 		}
 
 		private void Crouch()
 		{
 			playerMovement.Crouch();
+			playerAnimationController.Crouch();
 		}
 		#endregion
 	}
