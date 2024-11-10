@@ -1,4 +1,5 @@
 using Cinemachine;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace Gameplay.Player
 		float sensX;
 		[SerializeField]
 		float sensY;
+		[SerializeField]
+		float peakAmplitude;
 		[Header("FOV FX")]
 		[SerializeField]
 		float fovChangeDuration;
@@ -38,6 +41,8 @@ namespace Gameplay.Player
 
 		Vector2 mouseDir;
 		Transform cameraTransform;
+		CinemachineCameraOffset offset;
+		CinemachineRecomposer recomposer;
 
 		private Vignette vignette;
 		float baseVignetteSmoothness;
@@ -50,6 +55,8 @@ namespace Gameplay.Player
 			cameraTransform = m_Camera.transform;
 			m_Camera.m_Lens.FieldOfView = baseFOV;
 			volume.profile.TryGet<Vignette>(out vignette);
+			offset = m_Camera.GetComponent<CinemachineCameraOffset>();
+			recomposer = m_Camera.GetComponent<CinemachineRecomposer>();
 			baseVignetteSmoothness = vignette.smoothness.value;
 		}
 
@@ -75,9 +82,21 @@ namespace Gameplay.Player
 			mouseDir = dir;
 		}
 
+		public void StartPeaking(float direction)
+		{
+			DOTween.To(() => offset.m_Offset.x, x => offset.m_Offset.x = x, Mathf.Sign(direction) * peakAmplitude, 0.5f);
+			DOTween.To(() => recomposer.m_Dutch, x => recomposer.m_Dutch = x, Mathf.Sign(direction) * -10f, 0.5f);
+		}
+
+		public void StopPeaking()
+		{
+			DOTween.To(() => offset.m_Offset.x, x => offset.m_Offset.x = x, 0f, 0.5f);
+			DOTween.To(() => recomposer.m_Dutch, x => recomposer.m_Dutch = x, 0f, 0.5f);
+		}
+
 		public void OnSprintBegin()
 		{
-			if(fovAnimCoroutine != null)
+			if (fovAnimCoroutine != null)
 			{
 				StopCoroutine(fovAnimCoroutine);
 			}

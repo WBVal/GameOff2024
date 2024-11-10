@@ -46,6 +46,9 @@ namespace Gameplay.Player
 		{
 			inputs.Player.Camera.performed += OnCamera;
 			inputs.Player.Camera.canceled += OnCameraStop;
+			inputs.Player.Peak.performed += OnPeak;
+			inputs.Player.Peak.canceled += OnStopPeak;
+
 			inputs.Player.Movement.performed += OnMove;
 			inputs.Player.Movement.canceled += OnStopMove;
 			inputs.Player.Jump.performed += OnJump;
@@ -80,7 +83,6 @@ namespace Gameplay.Player
 				case State.EXECUTE:
 					break;
 			}
-			Debug.Log(currentState);
 		}
 
 		#region Inputs
@@ -92,6 +94,17 @@ namespace Gameplay.Player
 		{
 			playerCamera.MoveCamera(Vector2.zero);
 		}
+
+		private void OnPeak(InputAction.CallbackContext ctx)
+		{
+			playerCamera.StartPeaking(ctx.ReadValue<float>());
+		}
+
+		private void OnStopPeak(InputAction.CallbackContext ctx)
+		{
+			playerCamera.StopPeaking();
+		}
+
 		private void OnMove(InputAction.CallbackContext ctx)
 		{
 			moveDir = ctx.ReadValue<Vector2>();

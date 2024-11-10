@@ -89,6 +89,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Peak"",
+                    ""type"": ""Value"",
+                    ""id"": ""7d9f5327-53f9-4e07-8750-f68f2d4aefb9"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -388,6 +397,39 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Notes"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""A/E"",
+                    ""id"": ""2a71b3e4-41f9-47b7-92b2-c6557eff4777"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Peak"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""552732ed-9b66-4961-99d6-6e1e7e461c4c"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Peak"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""3ce27ab8-4fa0-48d6-ab15-e873e84453b9"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Peak"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -403,6 +445,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Notes = m_Player.FindAction("Notes", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
+        m_Player_Peak = m_Player.FindAction("Peak", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -471,6 +514,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Notes;
     private readonly InputAction m_Player_Pause;
+    private readonly InputAction m_Player_Peak;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -482,6 +526,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Notes => m_Wrapper.m_Player_Notes;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
+        public InputAction @Peak => m_Wrapper.m_Player_Peak;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -512,6 +557,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @Peak.started += instance.OnPeak;
+            @Peak.performed += instance.OnPeak;
+            @Peak.canceled += instance.OnPeak;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -537,6 +585,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @Peak.started -= instance.OnPeak;
+            @Peak.performed -= instance.OnPeak;
+            @Peak.canceled -= instance.OnPeak;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -563,5 +614,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnNotes(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnPeak(InputAction.CallbackContext context);
     }
 }

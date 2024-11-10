@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Peak",
+                    "type": "Value",
+                    "id": "7d9f5327-53f9-4e07-8750-f68f2d4aefb9",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -366,6 +375,39 @@
                     "action": "Notes",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "A/E",
+                    "id": "2a71b3e4-41f9-47b7-92b2-c6557eff4777",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Peak",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "552732ed-9b66-4961-99d6-6e1e7e461c4c",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Peak",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "3ce27ab8-4fa0-48d6-ab15-e873e84453b9",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Peak",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
