@@ -30,6 +30,7 @@ namespace Gameplay.Player
 
 		Vector2 moveDir;
 
+		Player player;
 		PlayerMovement playerMovement;
 		PlayerCamera playerCamera;
 		PlayerAnimationController playerAnimationController;
@@ -40,6 +41,7 @@ namespace Gameplay.Player
 			playerMovement = GetComponent<PlayerMovement>();
 			playerCamera = GetComponent<PlayerCamera>();
 			playerAnimationController = GetComponent<PlayerAnimationController>();
+			player = GetComponent<Player>();
 		}
 
 		private void OnEnable()
@@ -217,18 +219,21 @@ namespace Gameplay.Player
 		}
 		private void Idle()
 		{
+			player.NoiseLevel = 0f;
 			playerMovement.Stop();
 			playerAnimationController.Idle();
 		}
 
 		private void Walk()
 		{
+			player.NoiseLevel = 0.5f;
 			playerMovement.Walk();
 			playerAnimationController.Walk();
 		}
 
 		private void Run()
 		{
+			player.NoiseLevel = 1f;
 			playerMovement.Run();
 			playerCamera.OnSprintBegin();
 			playerAnimationController.Run();
@@ -236,6 +241,7 @@ namespace Gameplay.Player
 
 		private void Crouch()
 		{
+			player.NoiseLevel = 0f;
 			playerMovement.Crouch();
 			playerAnimationController.Crouch();
 		}
