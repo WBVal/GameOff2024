@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Gameplay.Level
 {
-	public class Clue : MonoBehaviour
+	public class Clue
 	{
 		NpcAttribute attribute;
 		public NpcAttribute Attribute { get => attribute; set => attribute = value; }

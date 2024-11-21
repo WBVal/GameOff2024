@@ -297,5 +297,10 @@ namespace Gameplay.Player
 		{
 			exitingSlope = false;
 		}
+
+		public void EnableGravity(bool enable)
+		{
+			rb.useGravity = enable;
+		}
 	}
 }

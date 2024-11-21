@@ -14,6 +14,8 @@ namespace Gameplay.Player
 		readonly int hashSlide = Animator.StringToHash("Slide");
 		readonly int hashClimb = Animator.StringToHash("Climb");
 		readonly int hashVelocity = Animator.StringToHash("Velocity");
+		readonly int hashExecute = Animator.StringToHash("Execute");
+		readonly int hashExecuteBool = Animator.StringToHash("ExecuteSuccess");
 		#endregion
 
 		#region Variables Editables
@@ -63,6 +65,12 @@ namespace Gameplay.Player
 		public void Climb()
 		{
 			animator.SetTrigger(hashClimb);
+		}
+
+		public void Execute(bool success)
+		{
+			animator.SetBool(hashExecuteBool, success);
+			animator.SetTrigger(hashExecute);
 		}
 		#endregion
 

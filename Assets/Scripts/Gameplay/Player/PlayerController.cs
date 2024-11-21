@@ -1,3 +1,4 @@
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -58,8 +59,30 @@ namespace Gameplay.Player
 			inputs.Player.Run.performed += OnRun;
 			inputs.Player.Run.canceled += OnStopRun;
 			inputs.Player.Crouch.started += OnCrouch;
+			inputs.Player.Interact.started += OnInteract;
+
+			inputs.Player.Pause.performed += OnPause;
 
 			inputs.Player.Enable();
+		}
+
+		private void OnDisable()
+		{
+			inputs.Player.Camera.performed -= OnCamera;
+			inputs.Player.Camera.canceled -= OnCameraStop;
+			inputs.Player.Peak.performed -= OnPeak;
+			inputs.Player.Peak.canceled -= OnStopPeak;
+
+			inputs.Player.Movement.performed -= OnMove;
+			inputs.Player.Movement.canceled -= OnStopMove;
+			inputs.Player.Jump.performed -= OnJump;
+			inputs.Player.Jump.canceled -= OnJumpReleased;
+			inputs.Player.Run.performed -= OnRun;
+			inputs.Player.Run.canceled -= OnStopRun;
+			inputs.Player.Crouch.started -= OnCrouch;
+			inputs.Player.Interact.started -= OnInteract;
+
+			inputs.Player.Pause.performed -= OnPause;
 		}
 
 		void Update()
@@ -193,6 +216,14 @@ namespace Gameplay.Player
 			isRunning = false;
 		}
 
+		private void OnInteract(InputAction.CallbackContext ctx)
+		{
+			if (player.PlayerTarget != null)
+			{
+				player.PlayerTarget.OnInteraction();
+			}
+		}
+
 		private void OnNote(InputAction.CallbackContext ctx)
 		{
 
@@ -200,7 +231,7 @@ namespace Gameplay.Player
 
 		private void OnPause(InputAction.CallbackContext ctx)
 		{
-
+			GameManager.Instance.Pause();
 		}
 		#endregion
 
@@ -246,5 +277,26 @@ namespace Gameplay.Player
 			playerAnimationController.Crouch();
 		}
 		#endregion
+
+		public void Execute(Npc npc)
+		{
+			playerMovement.EnableGravity(false);
+			playerMovement.CanMove = false;
+			playerCamera.CanMove = false;
+			playerAnimationController.Execute(npc.IsTarget);
+		}
+
+		public void OnExecuteEnd()
+		{
+			playerMovement.EnableGravity(true);
+			currentState = State.IDLE;
+			playerMovement.CanMove = true;
+			playerCamera.CanMove = true;
+		}
+
+		public void DisableInputs()
+		{
+			inputs.Disable();
+		}
 	}
 }

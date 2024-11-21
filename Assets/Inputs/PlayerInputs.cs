@@ -98,6 +98,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""928a684a-af5c-49e8-9f8e-4323325ea804"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -430,6 +439,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Peak"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f7b7da3f-f3d1-4ef5-9906-a2f6f5c5d15e"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -446,6 +466,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_Player_Notes = m_Player.FindAction("Notes", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Peak = m_Player.FindAction("Peak", throwIfNotFound: true);
+        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -515,6 +536,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Notes;
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Peak;
+    private readonly InputAction m_Player_Interact;
     public struct PlayerActions
     {
         private @PlayerInputs m_Wrapper;
@@ -527,6 +549,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         public InputAction @Notes => m_Wrapper.m_Player_Notes;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Peak => m_Wrapper.m_Player_Peak;
+        public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -560,6 +583,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Peak.started += instance.OnPeak;
             @Peak.performed += instance.OnPeak;
             @Peak.canceled += instance.OnPeak;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -588,6 +614,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Peak.started -= instance.OnPeak;
             @Peak.performed -= instance.OnPeak;
             @Peak.canceled -= instance.OnPeak;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -615,5 +644,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         void OnNotes(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnPeak(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

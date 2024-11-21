@@ -50,6 +50,9 @@ namespace Gameplay.Player
 		Coroutine fovAnimCoroutine;
 		Coroutine vignetteAnimCoroutine;
 
+		bool canMove;
+		public bool CanMove { get => canMove; set => canMove = value; }
+
 		private void Awake()
 		{
 			cameraTransform = m_Camera.transform;
@@ -62,6 +65,7 @@ namespace Gameplay.Player
 
 		void Start()
 		{
+			canMove = true;
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 		}
@@ -69,12 +73,15 @@ namespace Gameplay.Player
 		// Update is called once per frame
 		void Update()
 		{
-			yRotation += mouseDir.x * Time.deltaTime * sensX;
-			xRotation -= mouseDir.y * Time.deltaTime * sensY;
-			xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+			if (canMove)
+			{
+				yRotation += mouseDir.x * Time.deltaTime * sensX;
+				xRotation -= mouseDir.y * Time.deltaTime * sensY;
+				xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-			cameraTransform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-			transform.rotation = Quaternion.Euler(0, yRotation, 0);
+				cameraTransform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+				transform.rotation = Quaternion.Euler(0, yRotation, 0);
+			}
 		}
 
 		public void MoveCamera(Vector2 dir)

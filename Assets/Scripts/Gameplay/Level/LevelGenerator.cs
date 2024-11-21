@@ -14,7 +14,13 @@ namespace Gameplay.Level
 		[SerializeField]
 		private Map map;
 
+		[SerializeField]
+		Transform npcSpawnParent;
+		public Transform NpcSpawnParent { get { return npcSpawnParent; } }
+
 		[Header("Generation Parameters")]
+		[SerializeField]
+		bool generateOnAwake;
 		[SerializeField]
 		int nbClues;
 		[SerializeField]
@@ -46,10 +52,12 @@ namespace Gameplay.Level
 			gatheringAreas = new List<GatheringArea>();
 			singleAreas = new List<SpawnArea>();
 			npcList = new List<Npc>();
+
+			if(generateOnAwake) GenerateLevel();
 		}
 
 		[ContextMenu("Generate Level")]
-		public async void GenerateLevel()
+		public void GenerateLevel()
 		{
 			// Pick Target profile
 			GenerateTargetAttributes();
@@ -147,6 +155,7 @@ namespace Gameplay.Level
 				{
 					int randomIndex = Random.Range(0, tempTargetAttributes.Count); // pick a random attribute in target profile
 					npcAttributes.Add(tempTargetAttributes[randomIndex]);
+					NpcAttributesController.AttributeCompatibilityCleanUp(tempAttributes, tempTargetAttributes[randomIndex]);
 					tempTargetAttributes.RemoveAt(randomIndex);
 				}
 			}
@@ -158,7 +167,7 @@ namespace Gameplay.Level
 				npcAttributes.Add(newAttribute);
 
 				// Remove uncompatibilities from the available attributes list
-				NpcAttributesController.AttributeCompatibilityCleanUp(tempAttributes, newAttribute);
+					NpcAttributesController.AttributeCompatibilityCleanUp(tempAttributes, newAttribute);
 			}
 
 			return npcAttributes.ToArray();
@@ -169,7 +178,7 @@ namespace Gameplay.Level
 			List<GatheringArea> tempGatheringAreas = new List<GatheringArea>(map.GatherSpawnAreas);
 			List<SpawnArea> tempSingleAreas = new List<SpawnArea>(map.SingleSpawnAreas);
 
-			int nbGathering = Random.Range(minimumGatheringAreas, tempGatheringAreas.Count);
+			int nbGathering = Random.Range(minimumGatheringAreas, nbClues);
 			int nbSingle = Random.Range(minimumSingleAreas, tempSingleAreas.Count);
 
 			// Gathering areas
@@ -187,6 +196,10 @@ namespace Gameplay.Level
 				singleAreas.Add(tempSingleAreas[randIndex]);
 				tempSingleAreas.RemoveAt(randIndex);
 			}
+
+			foreach(GatheringArea area in tempGatheringAreas) area.gameObject.SetActive(false);
+			foreach (SpawnArea area in tempSingleAreas) area.gameObject.SetActive(false);
+
 			Debug.Log("Generated " + nbGathering + " gathering areas and " + nbSingle + " single areas.");
 		}
 
@@ -194,8 +207,9 @@ namespace Gameplay.Level
 		{
 			foreach (Transform t in area.SpawnPoints)
 			{
-				Npc newNpc = Instantiate(npcPrefab, transform);
+				Npc newNpc = Instantiate(npcPrefab, npcSpawnParent);
 				newNpc.transform.SetPositionAndRotation(t.position, t.rotation);
+				newNpc.OnPlayerDetected += area.OnNpcDetection;
 				npcList.Add(newNpc);
 			}
 		}

@@ -5,54 +5,90 @@ using UnityEngine;
 namespace Gameplay.Level
 {
     public class GatheringArea : SpawnArea
-    {
+	{
 		[SerializeField]
 		ClueDisplay clueDisplay;
+		[SerializeField]
+		float clueLoadingTime;
 
-        private Clue clue;
-        public Clue Clue 
-		{ 
-			get => clue;
-			set
-			{
-				clue = value;
-				clueDisplay.SetClue(value);
-			} 
+		public enum ClueState
+		{
+			HIDDEN,
+			LOCKED,
+			LOADING,
+			REVEALED
 		}
+        private Clue clue;
+        public Clue Clue { get => clue; set => clue = value; }
 
-		bool isLoading;
-		bool clueLocked;
+		private Coroutine loadCoroutine;
+		private float loadProgress;
+		private ClueState currentState;
+
+		private void Awake()
+		{
+			currentState = ClueState.HIDDEN;
+			clueDisplay.HideClue();
+		}
 
 		private void OnTriggerEnter(Collider other)
 		{
-			if (!clueLocked)
+			if (currentState != ClueState.LOCKED)
 			{
-				isLoading = true;
+				currentState = ClueState.LOADING;
+
+				if (loadCoroutine != null)
+				{
+					StopCoroutine(loadCoroutine);
+				}
+				loadCoroutine = StartCoroutine(LoadClueCoroutine());
 			}
 		}
 
 		private void OnTriggerExit(Collider other)
 		{
-			isLoading = false;
+			if (currentState == ClueState.LOCKED) return;
+
+			if (loadCoroutine != null)
+			{
+				StopCoroutine(loadCoroutine);
+			}
+
+			currentState = ClueState.HIDDEN;
+			clueDisplay.HideClue();
 		}
 
 		private void OnClueLoaded()
 		{
-
+			currentState = ClueState.REVEALED;
+			clueDisplay.DisplayClue(clue);
 		}
 
-		private void OnDetected()
+		private IEnumerator LoadClueCoroutine()
 		{
-			clueLocked = false;
-		}
-
-		private void OnDrawGizmos()
-		{
-			Gizmos.color = Color.blue;
-			foreach(Transform t in spawnPoints)
+			loadProgress = 0.0f;
+			float elapsedTime = 0f;
+			while(elapsedTime < clueLoadingTime)
 			{
-				Gizmos.DrawWireCube(t.position, Vector3.one);
+				elapsedTime += Time.deltaTime;
+				loadProgress = elapsedTime / clueLoadingTime;
+				clueDisplay.LoadClue(loadProgress);
+				yield return null;
 			}
+			OnClueLoaded();
+			loadProgress = 1f;
+		}
+
+		public override void OnNpcDetection()
+		{
+			if(currentState == ClueState.LOCKED) return; // avoid multiple calls
+
+			currentState = ClueState.LOCKED;
+			if (loadCoroutine != null)
+			{
+				StopCoroutine(loadCoroutine);
+			}
+			clueDisplay.LockClue();
 		}
 	}
 }

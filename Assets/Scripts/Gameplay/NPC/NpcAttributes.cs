@@ -7,16 +7,15 @@ namespace Gameplay.NPC
 {
 	public enum NpcAttribute
 	{
-		CAP,
-		DURAG,
+		BERET,
+		HAT,
+		NECKTIE,
+		BOWTIE,
 		GLASSES,
 		CIG,
-		CHAIN,
-		HOODIE,
-		TANKTOP,
 		SHIRT,
-		SNEAKERS,
-		BOOTS,
+		SUSPENDERS,
+		BOOTS
 	}
 
 	public static class NpcAttributesController
@@ -30,23 +29,16 @@ namespace Gameplay.NPC
 		{
 			list.Remove(element);
 
-			if(element == NpcAttribute.CAP || element == NpcAttribute.DURAG)
+			if(element == NpcAttribute.BERET || element == NpcAttribute.HAT)
 			{
-				list.Remove(NpcAttribute.DURAG);
-				list.Remove(NpcAttribute.CAP);
+				list.Remove(NpcAttribute.BERET);
+				list.Remove(NpcAttribute.HAT);
 				return;
 			}
-			if (element == NpcAttribute.HOODIE || element == NpcAttribute.TANKTOP || element == NpcAttribute.SHIRT)
+			if (element == NpcAttribute.BOWTIE || element == NpcAttribute.NECKTIE)
 			{
-				list.Remove(NpcAttribute.HOODIE);
-				list.Remove(NpcAttribute.SHIRT);
-				list.Remove(NpcAttribute.TANKTOP);
-				return;
-			}
-			if (element == NpcAttribute.SNEAKERS || element == NpcAttribute.BOOTS)
-			{
-				list.Remove(NpcAttribute.SNEAKERS);
-				list.Remove(NpcAttribute.BOOTS);
+				list.Remove(NpcAttribute.BOWTIE);
+				list.Remove(NpcAttribute.NECKTIE);
 				return;
 			}
 		}

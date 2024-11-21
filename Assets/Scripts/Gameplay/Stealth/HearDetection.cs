@@ -46,11 +46,11 @@ namespace Gameplay.Stealth
 			return false;
 		}
 
-		private void OnDrawGizmos()
-		{
-			Gizmos.color = Color.green;
-			Gizmos.DrawWireSphere(transform.position, farDetectionRange);
-			Gizmos.DrawWireSphere(transform.position, closeDetectionRange);
-		}
+		//private void OnDrawGizmos()
+		//{
+		//	Gizmos.color = Color.green;
+		//	Gizmos.DrawWireSphere(transform.position, farDetectionRange);
+		//	Gizmos.DrawWireSphere(transform.position, closeDetectionRange);
+		//}
 	}
 }
