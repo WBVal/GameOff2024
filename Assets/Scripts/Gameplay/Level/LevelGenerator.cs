@@ -1,4 +1,5 @@
 using Gameplay.NPC;
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,6 @@ namespace Gameplay.Level
 
 		[Header("Generation Parameters")]
 		[SerializeField]
-		bool generateOnAwake;
-		[SerializeField]
 		int nbClues;
 		[SerializeField]
 		[Range(0.1f, 1f)]
@@ -30,6 +29,18 @@ namespace Gameplay.Level
 		int minimumGatheringAreas;
 		[SerializeField]
 		int minimumSingleAreas;
+
+		[Header("Policeman")]
+		[SerializeField]
+		Policeman policemanPrefab;
+		[SerializeField]
+		Transform pathHolder;
+
+		[Header("Debug")]
+		[SerializeField]
+		bool generateOnAwake;
+		[SerializeField]
+		bool spawnPoliceman;
 
 		private List<Clue> clueList;
 		public List<Clue> ClueList { get { return clueList; } }
@@ -45,6 +56,8 @@ namespace Gameplay.Level
 		private List<Npc> npcList;
 
 		private int nbMimics;
+
+		private Policeman policeman;
 
 		private void Awake()
 		{
@@ -112,6 +125,20 @@ namespace Gameplay.Level
 				mimicCount++;
 
 				npcList.RemoveAt(randIndex);
+			}
+
+			// Spawn Policeman
+			if (spawnPoliceman)
+			{
+				policeman = Instantiate(policemanPrefab, transform);
+				List<Transform> waypoints = new List<Transform>();
+				foreach(Transform t in pathHolder)
+				{
+					waypoints.Add(t);
+				}
+				policeman.transform.SetPositionAndRotation(waypoints[0].position, waypoints[0].rotation);
+				policeman.Waypoints = waypoints.ToArray();
+				GameManager.Instance.Policeman = policeman;
 			}
 
 			// (Bonus) create props

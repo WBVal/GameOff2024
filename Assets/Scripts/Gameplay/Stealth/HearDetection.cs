@@ -25,6 +25,12 @@ namespace Gameplay.Stealth
 		{
 			player = GameManager.Instance.Player;
 			playerTransform = player.transform;
+			soundAgent.enabled = false;
+		}
+
+		private void Start()
+		{
+			soundAgent.enabled = true;
 		}
 
 		public bool PlayerHeard()

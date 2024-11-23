@@ -10,19 +10,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 
-public class Npc : MonoBehaviour, IFpsInteractable
+public class Npc : DetectionBehaviour, IFpsInteractable
 {
-	[Header("Parameters")]
-	[SerializeField]
-	float detectionSpeed;
-	[SerializeField]
-	float detectionCancelSpeed;
-
 	[Header("Visuals")]
-	[SerializeField]
-	NpcDetectionUI detectionUI;
-	[SerializeField]
-	Light spotlight;
 	[SerializeField]
 	CinemachineVirtualCamera executeCam;
 
@@ -64,74 +54,25 @@ public class Npc : MonoBehaviour, IFpsInteractable
 		}
 	}
 
-
-	private SightDetection sightDetection;
-	private HearDetection hearDetection;
-
-	private Color baseLightColor;
-
-	private bool detectingPlayer;
-	private bool playerDetected;
-
-	private float detectionGauge;
-
-	private Player player;
-
 	private NpcAnimationController animationController;
 
 	private bool isDead;
 
-	private void Awake()
+	protected override void Awake()
 	{
+		base.Awake();
 		executeCam.gameObject.SetActive(false);
-		sightDetection = GetComponent<SightDetection>();
-		hearDetection = GetComponent<HearDetection>();
 		animationController = GetComponent<NpcAnimationController>();
-
-		baseLightColor = spotlight.color;
-		detectionGauge = 0f;
-
-		player = GameManager.Instance.Player;
 	}
 
 	private void Update()
 	{
-		if (playerDetected || !player.CanBeDetected) return;
-
-		if (sightDetection.PlayerInSight() || hearDetection.PlayerHeard())
-		{
-			detectingPlayer = true;
-		}
-		else
-		{
-			detectingPlayer = false;
-		}
-		UpdateGauge();
+		CheckDetection();
 	}
 
-	private void UpdateGauge()
+	protected override void DetectPlayer()
 	{
-		if (detectingPlayer)
-		{
-			detectionGauge += Time.deltaTime * detectionSpeed;
-		}
-		else
-		{
-			detectionGauge -= Time.deltaTime * detectionCancelSpeed;
-		}
-
-		if (detectionGauge >= 1f)
-			DetectPlayer();
-		detectionGauge = Mathf.Clamp(detectionGauge, 0f, 1f);
-		detectionUI.SetDetection(detectionGauge);
-	}
-
-	protected virtual void DetectPlayer()
-	{
-		if (!player.CanBeDetected) return;
-
-		playerDetected = true;
-		spotlight.color = Color.red;
+		base.DetectPlayer();
 		onPlayerDetected?.Invoke();
 	}
 
@@ -151,7 +92,7 @@ public class Npc : MonoBehaviour, IFpsInteractable
 
 	public void OnInteraction()
 	{
-		GameManager.Instance.Player.Execute(this);
+		player.Execute(this);
 		executeCam.gameObject.SetActive(true);
 		OnExecute();
 	}

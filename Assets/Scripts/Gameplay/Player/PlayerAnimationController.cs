@@ -13,6 +13,7 @@ namespace Gameplay.Player
 		readonly int hashJump = Animator.StringToHash("Jump");
 		readonly int hashSlide = Animator.StringToHash("Slide");
 		readonly int hashClimb = Animator.StringToHash("Climb");
+		readonly int hashKilled = Animator.StringToHash("Killed");
 		readonly int hashVelocity = Animator.StringToHash("Velocity");
 		readonly int hashExecute = Animator.StringToHash("Execute");
 		readonly int hashExecuteBool = Animator.StringToHash("ExecuteSuccess");
@@ -66,7 +67,10 @@ namespace Gameplay.Player
 		{
 			animator.SetTrigger(hashClimb);
 		}
-
+		public void Killed()
+		{
+			animator.SetTrigger(hashKilled);
+		}
 		public void Execute(bool success)
 		{
 			animator.SetBool(hashExecuteBool, success);

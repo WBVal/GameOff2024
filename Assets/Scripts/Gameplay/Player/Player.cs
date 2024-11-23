@@ -72,5 +72,10 @@ namespace Gameplay.Player
 		{
 			playerController.DisableInputs();
 		}
+
+		public void Killed()
+		{
+			playerController.OnKilled();
+		}
 	}
 }

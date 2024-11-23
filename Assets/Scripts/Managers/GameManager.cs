@@ -3,6 +3,7 @@ using Gameplay.Level;
 using Gameplay.Player;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UI;
 using UnityEngine;
 using Utils;
@@ -17,6 +18,10 @@ namespace Managers
 		[SerializeField]
         Player player;
 		public Player Player { get => player; }
+
+		[SerializeField]
+		Policeman policeman;
+		public Policeman Policeman { get => policeman; set => policeman = value; }
 
 		[SerializeField]
 		RunTimer timer;
@@ -51,6 +56,8 @@ namespace Managers
             {
                 t.GetComponent<Npc>().Scare();
             }
+
+			policeman.StartChasing();
         }
 
         public void OnMissExecute()
@@ -61,9 +68,22 @@ namespace Managers
 
         public void OnEndAreaEnter()
 		{
-			//timer.StopTimer();
+			policeman.Stop();
 			DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0f, 1f);
             Player.DisableInputs();
+			HudManager.Instance.HideTimer();
+			endTime = timer.GetTimeRaw();
+			HudManager.Instance.Message("mission time: " + timer.GetFormattedTime(endTime));
+		}
+
+		public void PlayerKilled()
+		{
+			player.Killed();
+		}
+
+		public void OnDeath()
+		{
+			DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0f, 1f);
 			HudManager.Instance.HideTimer();
 			endTime = timer.GetTimeRaw();
 			HudManager.Instance.Message("mission time: " + timer.GetFormattedTime(endTime));

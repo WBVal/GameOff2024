@@ -298,5 +298,13 @@ namespace Gameplay.Player
 		{
 			inputs.Disable();
 		}
+
+		public void OnKilled()
+		{
+			DisableInputs();
+			playerMovement.CanMove = false;
+			playerCamera.CanMove = false;
+			playerAnimationController.Killed();
+		}
 	}
 }
