@@ -86,7 +86,7 @@ namespace Managers
 			DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0f, 1f);
 			HudManager.Instance.HideTimer();
 			endTime = timer.GetTimeRaw();
-			HudManager.Instance.Message("mission time: " + timer.GetFormattedTime(endTime));
+			HudManager.Instance.Message("You died");
 		}
 
 		#region Timer
