@@ -24,6 +24,9 @@ public class DetectionBehaviour : MonoBehaviour
 	protected bool playerDetected;
 
 	protected float detectionGauge;
+	public float DetectionGauge { get => detectionGauge; }
+
+	public float DetectionRange {get=>hearDetection.DetectionRange; }
 
 	protected Player player;
 

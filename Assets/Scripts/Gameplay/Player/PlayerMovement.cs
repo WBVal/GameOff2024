@@ -20,6 +20,8 @@ namespace Gameplay.Player
 		float airMultiplier;
 		[SerializeField]
 		float jumpCooldown;
+		[SerializeField]
+		float coyoteTimeCounter;
 
 		[Header("Crouch")]
 		[SerializeField]
@@ -69,10 +71,16 @@ namespace Gameplay.Player
 		bool jumpPressed;
 		public bool JumpPressed { get => jumpPressed; set => jumpPressed = value; }
 
+		[SerializeField]
+		float coyoteTime;
+		public float CoyoteTime { get => coyoteTime; set => coyoteTime = value; }
+
 		Rigidbody rb;
 		Vector3 moveDirection;
 
 		float currentSpeed;
+
+		bool isJumping;
 
 		CapsuleCollider capCollider;
 		bool tooSteep;
@@ -81,7 +89,7 @@ namespace Gameplay.Player
 		RaycastHit climbHit;
 		Coroutine climbCoroutine;
 		bool isClimbing;
-
+		
 		Coroutine slideCoroutine;
 
 		PlayerAnimationController playerAnimationController;
@@ -99,6 +107,10 @@ namespace Gameplay.Player
 		private void Update()
 		{
 			rb.drag = IsGrounded() ? groundDrag : 0f;
+
+			if (!isJumping)
+				coyoteTime = IsGrounded() ? coyoteTimeCounter : coyoteTime -= Time.deltaTime;
+
 			SpeedControl();
 
 			// Check for climbable ledges
@@ -120,7 +132,7 @@ namespace Gameplay.Player
 
 		private void Move()
 		{
-			if(!canMove) return;
+			if (!canMove) return;
 
 			moveDirection = transform.forward * inputDirection.y + transform.right * inputDirection.x;
 
@@ -136,7 +148,7 @@ namespace Gameplay.Player
 				if (rb.velocity.y > 0f)
 					rb.AddForce(Vector3.down * 3000f, ForceMode.Force);
 			}
-			else if(IsGrounded())
+			else if (IsGrounded())
 				rb.AddForce(moveDirection.normalized * currentSpeed, ForceMode.VelocityChange);
 			else
 				rb.AddForce(moveDirection.normalized * airMultiplier, ForceMode.VelocityChange);
@@ -187,6 +199,8 @@ namespace Gameplay.Player
 		public void Jump()
 		{
 			exitingSlope = true;
+			isJumping = true;
+			coyoteTime = 0f;
 			rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 			rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 			Invoke("OnJumpEnd", jumpCooldown);
@@ -199,7 +213,7 @@ namespace Gameplay.Player
 			canMove = false;
 
 			isClimbing = true;
-			if(climbCoroutine != null)
+			if (climbCoroutine != null)
 			{
 				StopCoroutine(climbCoroutine);
 			}
@@ -229,7 +243,7 @@ namespace Gameplay.Player
 
 		public bool IsGrounded()
 		{
-			return Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayer);
+			return Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.01f, groundLayer);
 		}
 
 		public bool CanGetUp()
@@ -240,7 +254,7 @@ namespace Gameplay.Player
 		public void Slide()
 		{
 			GoDown();
-			if(slideCoroutine != null)
+			if (slideCoroutine != null)
 			{
 				StopCoroutine(slideCoroutine);
 			}
@@ -251,7 +265,7 @@ namespace Gameplay.Player
 		{
 			float elapsedTime = 0f;
 			float diminishingStrength = slideStrength;
-			while(elapsedTime < slideDuration)
+			while (elapsedTime < slideDuration)
 			{
 				rb.AddForce(moveDirection.normalized * diminishingStrength, ForceMode.VelocityChange);
 				diminishingStrength = Mathf.Lerp(diminishingStrength, crouchSpeed, elapsedTime / slideDuration);
@@ -262,7 +276,7 @@ namespace Gameplay.Player
 
 		private bool OnSlope()
 		{
-			if(Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.4f))
+			if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.4f))
 			{
 				float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
 				tooSteep = angle >= maxSlopeAngle;
@@ -296,6 +310,7 @@ namespace Gameplay.Player
 		private void OnJumpEnd()
 		{
 			exitingSlope = false;
+			isJumping = false;
 		}
 
 		public void EnableGravity(bool enable)

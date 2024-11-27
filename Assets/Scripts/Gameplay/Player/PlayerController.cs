@@ -143,7 +143,7 @@ namespace Gameplay.Player
 		private void OnJump(InputAction.CallbackContext ctx)
 		{
 			playerMovement.JumpPressed = true;
-			if (playerMovement.IsGrounded())
+			if (playerMovement.IsGrounded() || playerMovement.CoyoteTime > 0f)
 			{
 				if (isCrouched)
 				{
@@ -156,6 +156,7 @@ namespace Gameplay.Player
 				}
 
 				playerMovement.Jump();
+				playerMovement.CoyoteTime = 0f;
 				playerAnimationController.Jump();
 			}
 		}

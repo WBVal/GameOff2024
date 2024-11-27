@@ -20,7 +20,27 @@ namespace Gameplay.Player
 
 		[SerializeField]
 		private float noiseLevel;
-		public float NoiseLevel { get => noiseLevel; set => noiseLevel = Mathf.Clamp(value, 0f, 1f); }
+		public float NoiseLevel 
+		{ 
+			get => noiseLevel;
+			set
+			{
+				noiseLevel = Mathf.Clamp(value, 0f, 1f);
+				HudManager.Instance.SetNoiseDetection(noiseLevel);
+			}
+		}
+
+		[SerializeField]
+		private float detectionLevel;
+		public float DetectionLevel 
+		{ 
+			get => detectionLevel;
+			set 
+			{
+				detectionLevel = Mathf.Clamp(value, 0f, 1f);
+				HudManager.Instance.SetSightDetection(detectionLevel);
+			}
+		}
 
 		[SerializeField]
 		private bool hasEye;
@@ -54,6 +74,12 @@ namespace Gameplay.Player
 			else
 			{
 				HudManager.Instance.CrossHairInteract(false);
+			}
+
+			if (canBeDetected)
+			{
+				detectionLevel = Mathf.Clamp(detectionLevel - Time.deltaTime, 0f, 1f);
+				HudManager.Instance.SetSightDetection(detectionLevel);
 			}
 		}
 

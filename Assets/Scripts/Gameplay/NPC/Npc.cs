@@ -18,10 +18,10 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 
 	[Header("Attributes")]
 	[SerializeField]
-    protected NpcAttribute[] attributes;
-    public NpcAttribute[] Attributes 
-	{ 
-		get=>attributes;
+	protected NpcAttribute[] attributes;
+	public NpcAttribute[] Attributes
+	{
+		get => attributes;
 		set
 		{
 			attributes = value;
@@ -30,22 +30,22 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 	}
 
 	private Action onPlayerDetected;
-	public Action OnPlayerDetected { get=>onPlayerDetected; set => onPlayerDetected = value; }
+	public Action OnPlayerDetected { get => onPlayerDetected; set => onPlayerDetected = value; }
 
-    private bool isTarget;
-    public bool IsTarget 
-	{ 
-		get=>isTarget;
+	private bool isTarget;
+	public bool IsTarget
+	{
+		get => isTarget;
 		set
 		{
 			isTarget = value;
 			if (value) name = "Target Npc";
-		} 
+		}
 	}
 
 	private bool isMimic;
-	public bool IsMimic 
-	{ 
+	public bool IsMimic
+	{
 		get => isMimic;
 		set
 		{
@@ -68,6 +68,13 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 	private void Update()
 	{
 		CheckDetection();
+
+		// Send detection level if in range of player
+		if (Vector3.Distance(transform.position, player.transform.position) <= DetectionRange)
+		{
+			if (DetectionGauge >= player.DetectionLevel)
+				player.DetectionLevel = DetectionGauge;
+		}
 	}
 
 	protected override void DetectPlayer()
@@ -78,10 +85,10 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 
 	private void OnDrawGizmos()
 	{
-        if (isTarget)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position + Vector3.up * 2f, 0.2f);
+		if (isTarget)
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawSphere(transform.position + Vector3.up * 2f, 0.2f);
 		}
 		if (isMimic)
 		{
@@ -122,7 +129,7 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 
 	public void Scare()
 	{
-		if(!isDead)
+		if (!isDead)
 			animationController.Scared();
 	}
 }

@@ -18,6 +18,8 @@ namespace Gameplay.Stealth
 		[SerializeField]
 		float farDetectionRange;
 
+		public float DetectionRange { get => farDetectionRange; }
+
 		Player.Player player;
 		Transform playerTransform;
 

@@ -22,6 +22,9 @@ namespace Managers
         [SerializeField]
         Message messageContainer;
 
+        [SerializeField]
+        HudDetectionUI hudDetection;
+
 		public void CrossHairInteract(bool canInteract)
         {
             crosshair.color = canInteract ? Color.red : Color.white;
@@ -51,5 +54,14 @@ namespace Managers
         {
             messageContainer.DisplayMessage(content, 3f);
 		}
-    }
+
+        public void SetSightDetection(float value)
+        {
+            hudDetection.SetNormalizedSightDetection(value);
+		}
+		public void SetNoiseDetection(float value)
+		{
+			hudDetection.SetHearingDetectionLevel(value);
+		}
+	}
 }

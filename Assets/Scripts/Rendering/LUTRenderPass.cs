@@ -12,7 +12,6 @@ public class LUTRenderPass : ScriptableRenderPass
 	Material materialToBlit;
 	RenderTargetIdentifier cameraColorTargetIdent;
 	RenderTargetHandle tempTexture;
-	RTHandleSystem test = new RTHandleSystem();
 
 	public LUTRenderPass(string profilerTag,
 	  RenderPassEvent renderPassEvent, Material materialToBlit)
