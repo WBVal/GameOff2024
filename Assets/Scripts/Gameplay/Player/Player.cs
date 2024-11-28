@@ -68,12 +68,14 @@ namespace Gameplay.Player
 				if (1 << hit.transform.gameObject.layer == interactableLayer)
 				{
 					playerTarget = hit.collider.GetComponent<IFpsInteractable>();
+					playerTarget.ShowHelper();
 					HudManager.Instance.CrossHairInteract(true);
 				}
 			}
 			else
 			{
 				HudManager.Instance.CrossHairInteract(false);
+				HudManager.Instance.ShowHelper(string.Empty);
 			}
 
 			if (canBeDetected)

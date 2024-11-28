@@ -1,3 +1,5 @@
+using Gameplay.Player;
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,15 +27,18 @@ namespace Gameplay.Level
 		private float loadProgress;
 		private ClueState currentState;
 
+		ScriptablePlayerStats playerStats;
+
 		private void Awake()
 		{
+			playerStats = PlayerStatsManager.Instance.PlayerStats;
 			currentState = ClueState.HIDDEN;
 			clueDisplay.HideClue();
 		}
 
 		private void OnTriggerEnter(Collider other)
 		{
-			if (currentState != ClueState.LOCKED)
+			if (currentState != ClueState.LOCKED || playerStats.NpcForgiveness)
 			{
 				currentState = ClueState.LOADING;
 
@@ -47,7 +52,7 @@ namespace Gameplay.Level
 
 		private void OnTriggerExit(Collider other)
 		{
-			if (currentState == ClueState.LOCKED) return;
+			if (currentState == ClueState.LOCKED && !playerStats.NpcForgiveness) return;
 
 			if (loadCoroutine != null)
 			{
@@ -60,6 +65,7 @@ namespace Gameplay.Level
 
 		private void OnClueLoaded()
 		{
+			PlayerStatsManager.Instance.IsLucky = false;
 			currentState = ClueState.REVEALED;
 			clueDisplay.DisplayClue(clue);
 		}

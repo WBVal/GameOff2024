@@ -12,8 +12,8 @@ namespace Gameplay.NPC
 		[System.Serializable]
 		public class AttributeModel
 		{
-			public NpcAttribute attribute; // Name of the event for identification
-			public GameObject asset; // UnityEvent to trigger when this animation event occurs
+			public NpcAttribute attribute;
+			public GameObject asset;
 		}
 
 		[Header("Attribute models")]

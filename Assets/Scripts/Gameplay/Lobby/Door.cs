@@ -1,3 +1,4 @@
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,11 @@ namespace Gameplay.Lobby
 		public void OnInteraction()
 		{
 			LobbyManager.Instance.ExitLobby();
+		}
+
+		public void ShowHelper()
+		{
+			HudManager.Instance.ShowHelper("Open Door");
 		}
 	}
 }

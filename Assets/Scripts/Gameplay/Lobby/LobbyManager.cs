@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Managers;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,9 +9,12 @@ namespace Gameplay.Lobby
 {
     public class LobbyManager : Singleton<LobbyManager>
     {
-        public void ExitLobby()
+        [SerializeField]
+        string[] loadableScenes;
+
+		public void ExitLobby()
         {
-            SceneFlowManager.Instance.LoadScene("SampleScene");
+            SceneFlowManager.Instance.LoadScene(loadableScenes[0]);
         }
     }
 }

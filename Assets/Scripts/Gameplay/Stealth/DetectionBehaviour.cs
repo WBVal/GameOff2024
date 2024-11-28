@@ -37,8 +37,11 @@ public class DetectionBehaviour : MonoBehaviour
 	protected bool isSeen;
 	protected bool isHeard;
 
+	protected ScriptablePlayerStats stats;
+
 	protected virtual void Awake()
 	{
+		stats = PlayerStatsManager.Instance.PlayerStats;
 		sightDetection = GetComponent<SightDetection>();
 		hearDetection = GetComponent<HearDetection>();
 
@@ -62,11 +65,11 @@ public class DetectionBehaviour : MonoBehaviour
 			// Detects player quicker if in sight
 			if(isSeen) 
 			{ 
-				detectionSpeed = baseDetectionSpeed * 2f; 
+				detectionSpeed = baseDetectionSpeed * 2f * stats.DetectionSpeed; 
 			}
 			else
 			{
-				detectionSpeed = baseDetectionSpeed;
+				detectionSpeed = baseDetectionSpeed * stats.DetectionSpeed;
 			}
 		}
 		else
@@ -80,6 +83,7 @@ public class DetectionBehaviour : MonoBehaviour
 	{
 		if (!player.CanBeDetected) return;
 
+		PlayerStatsManager.Instance.IsGhost = false;
 		playerDetected = true;
 		spotlight.color = Color.red;
 	}

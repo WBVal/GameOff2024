@@ -9,8 +9,6 @@ namespace UI
     {
         [Header("Eye")]
         [SerializeField]
-        Image eyeImage;
-        [SerializeField]
         Animator eyeAnimator;
 
         [Header("Hear")]

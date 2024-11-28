@@ -7,5 +7,6 @@ namespace Utils
 	public interface IFpsInteractable
 	{
 		void OnInteraction();
+		void ShowHelper();
 	}
 }

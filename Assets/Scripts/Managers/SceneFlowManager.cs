@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -25,7 +26,9 @@ namespace Managers
 
 		public void LoadScene(string sceneName)
 		{
-			if(loadSceneCoroutine != null) StopCoroutine(loadSceneCoroutine);
+			DOTween.KillAll();
+			Time.timeScale = 1f;
+			if (loadSceneCoroutine != null) StopCoroutine(loadSceneCoroutine);
 
 			loadSceneCoroutine = StartCoroutine(LoadSceneCoroutine(sceneName));
 		}

@@ -5,16 +5,19 @@ using UnityEngine.UI;
 
 public class DetectionUI : MonoBehaviour
 {
-    [SerializeField]
-    Slider detectionSlider;
+	[SerializeField]
+	Image eyeIcon;
+	[SerializeField]
+	Animator eyeAnimator;
 
 	private void Awake()
 	{
-		detectionSlider.value = 0f;
+		eyeIcon.gameObject.SetActive(false);
 	}
 
 	public void SetDetection(float value)
 	{
-		detectionSlider.value = value;
+		eyeIcon.gameObject.SetActive(value > 0f);
+		eyeAnimator.Play("OpenEye", 0, value);
 	}
 }

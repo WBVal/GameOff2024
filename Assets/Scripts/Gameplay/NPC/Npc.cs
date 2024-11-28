@@ -75,6 +75,10 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 			if (DetectionGauge >= player.DetectionLevel)
 				player.DetectionLevel = DetectionGauge;
 		}
+		else if(playerDetected && stats.NpcForgiveness)
+		{
+			playerDetected = false;
+		}
 	}
 
 	protected override void DetectPlayer()
@@ -131,5 +135,10 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 	{
 		if (!isDead)
 			animationController.Scared();
+	}
+
+	public void ShowHelper()
+	{
+		HudManager.Instance.ShowHelper("Kill and steal eye");
 	}
 }

@@ -232,6 +232,11 @@ namespace Gameplay.Player
 
 		private void OnPause(InputAction.CallbackContext ctx)
 		{
+			if(HudManager.Instance.CurrentWindow != null)
+			{
+				HudManager.Instance.QuitCurrentWindow();
+				return;
+			}
 			GameManager.Instance.Pause();
 		}
 		#endregion

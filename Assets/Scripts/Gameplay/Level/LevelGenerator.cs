@@ -36,6 +36,10 @@ namespace Gameplay.Level
 		[SerializeField]
 		Transform pathHolder;
 
+		[Header("Bonuses")]
+		[SerializeField]
+		ClueDisplay bonusClue;
+
 		[Header("Debug")]
 		[SerializeField]
 		bool generateOnAwake;
@@ -83,6 +87,13 @@ namespace Gameplay.Level
 				clue.Attribute = targetAttributes[i];
 				clue.IsEqual = true;
 				clueList.Add(clue);
+
+				// If Free Clue
+				if (PlayerStatsManager.Instance.PlayerStats.FreeClue)
+				{
+					bonusClue.gameObject.SetActive(true);
+					bonusClue.DisplayClue(clueList[0]);
+				}
 			}
 
 			// Pick map layout (gathering and single areas)
@@ -140,8 +151,6 @@ namespace Gameplay.Level
 				policeman.Waypoints = waypoints.ToArray();
 				GameManager.Instance.Policeman = policeman;
 			}
-
-			// (Bonus) create props
 		}
 
 		[ContextMenu("Generate Target Attributes")]
@@ -239,6 +248,15 @@ namespace Gameplay.Level
 				newNpc.OnPlayerDetected += area.OnNpcDetection;
 				npcList.Add(newNpc);
 			}
+		}
+
+		public void DisableClues()
+		{
+			foreach(GatheringArea area in gatheringAreas)
+			{
+				area.gameObject.SetActive(false);
+			}
+
 		}
 	}
 }

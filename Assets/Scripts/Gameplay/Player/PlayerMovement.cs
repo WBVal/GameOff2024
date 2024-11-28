@@ -1,6 +1,8 @@
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Gameplay.Player
@@ -94,8 +96,11 @@ namespace Gameplay.Player
 
 		PlayerAnimationController playerAnimationController;
 
+		ScriptablePlayerStats stats;
+
 		private void Awake()
 		{
+			stats = PlayerStatsManager.Instance.PlayerStats;
 			canMove = true;
 			rb = GetComponent<Rigidbody>();
 			capCollider = GetComponent<CapsuleCollider>();
@@ -163,17 +168,17 @@ namespace Gameplay.Player
 
 		public void Walk()
 		{
-			currentSpeed = walkSpeed;
+			currentSpeed = walkSpeed * stats.SpeedFactor;
 		}
 
 		public void Run()
 		{
-			currentSpeed = runSpeed;
+			currentSpeed = runSpeed * stats.SpeedFactor;
 		}
 
 		public void Crouch()
 		{
-			currentSpeed = crouchSpeed;
+			currentSpeed = crouchSpeed * stats.SpeedFactor;
 		}
 
 		public void GoDown()

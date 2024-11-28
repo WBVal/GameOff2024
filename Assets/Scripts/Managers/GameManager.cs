@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Gameplay.Level;
 using Gameplay.Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -12,6 +13,9 @@ namespace Managers
 {
     public class GameManager : Singleton<GameManager>
 	{
+		[SerializeField]
+		bool isLobby;
+
 		[SerializeField]
         LevelGenerator levelGenerator;
 
@@ -27,6 +31,9 @@ namespace Managers
 		RunTimer timer;
 
 
+		float currentTimeScale;
+		public float CurrentTimeScale { get=>currentTimeScale; set => currentTimeScale = value; }
+
 		float endTime;
         public float EndTime { get => endTime; set => endTime = value; }
 
@@ -34,13 +41,18 @@ namespace Managers
 
 		private void Start()
 		{
+			if (isLobby) return;
+
 			timer.StartTimer();
 		}
 
 		public void Pause()
         {
-            isPaused = !isPaused;
-            Time.timeScale = isPaused ? 0 : 1;
+			if(!isPaused)
+				currentTimeScale = Time.timeScale;
+
+			isPaused = !isPaused;
+            Time.timeScale = isPaused ? 0 : currentTimeScale;
             HudManager.Instance.Pause(isPaused);
 			Cursor.lockState = isPaused ? CursorLockMode.Confined : CursorLockMode.Locked;
 			Cursor.visible = !isPaused;
@@ -56,7 +68,8 @@ namespace Managers
             {
                 t.GetComponent<Npc>().Scare();
             }
-
+			levelGenerator.DisableClues();
+			HudManager.Instance.Message("The policeman knows where you are.");
 			policeman.StartChasing();
         }
 
@@ -64,6 +77,7 @@ namespace Managers
         {
             Time.timeScale = 0;
             player.DisableInputs();
+			HudManager.Instance.OnMissExecute();
         }
 
         public void OnEndAreaEnter()
@@ -73,7 +87,11 @@ namespace Managers
             Player.DisableInputs();
 			HudManager.Instance.HideTimer();
 			endTime = timer.GetTimeRaw();
-			HudManager.Instance.Message("mission time: " + timer.GetFormattedTime(endTime));
+			PlayerStatsManager.Instance.PublishTime(endTime);
+			HudManager.Instance.OnVictory();
+			PlayerStatsManager.Instance.AddEye();
+
+			StartCoroutine(EndCoroutine(() => { HudManager.Instance.OnVictory(); }));
 		}
 
 		public void PlayerKilled()
@@ -86,7 +104,26 @@ namespace Managers
 			DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0f, 1f);
 			HudManager.Instance.HideTimer();
 			endTime = timer.GetTimeRaw();
-			HudManager.Instance.Message("You died");
+
+			StartCoroutine(EndCoroutine(() => { HudManager.Instance.OnDeath(); }));
+		}
+
+		[ContextMenu("GoToLobby")]
+		public void GoToLobby()
+		{
+			SceneFlowManager.Instance.LoadScene("LobbyScene");
+		}
+
+		IEnumerator EndCoroutine(Action callback)
+		{
+			float elapsedTime = 0f;
+			while(elapsedTime < 1f)
+			{
+				elapsedTime += Time.unscaledDeltaTime;
+
+				yield return null;
+			}
+			callback?.Invoke();
 		}
 
 		#region Timer

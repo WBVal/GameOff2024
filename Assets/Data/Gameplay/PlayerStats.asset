@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 579ab31fd6ea57143af88dc74bd28b24, type: 3}
+  m_Name: PlayerStats
+  m_EditorClassIdentifier: 
+  Upgrades:
+  - {fileID: 11400000, guid: c1b5e16b72bcdb449ae1053f765b7f5d, type: 2}
+  - {fileID: 11400000, guid: 0fa689f16fdace241b895d1d22e2f64b, type: 2}
+  - {fileID: 11400000, guid: 4076a2d3c64833b4e8b559e25fbdf701, type: 2}
+  - {fileID: 11400000, guid: 80721c8ea2954854b8a0f9de2c572fa3, type: 2}
+  - {fileID: 11400000, guid: 9f640919d6aaf3c4e888bb279e4f4c63, type: 2}
+  EyesCount: 94
+  SpeedFactor: 2
+  DetectionSpeed: 1
+  NpcForgiveness: 0
+  FreeClue: 0
+  BestStandardRunTime: 999
+  BestGhostRunTime: 3.4028235e+38
+  BestLuckyRunTime: 3.4028235e+38
+  BestNoPowerRunTime: 3.4028235e+38
+  BestCheaterRunTime: 3.4028235e+38
