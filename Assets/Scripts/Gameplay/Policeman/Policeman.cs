@@ -85,6 +85,7 @@ public class Policeman : DetectionBehaviour
 	protected override void DetectPlayer()
 	{
 		base.DetectPlayer();
+		patrolSpeed = 0f;
 		transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
 		KillPlayer();
 	}
