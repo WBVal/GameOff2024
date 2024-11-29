@@ -4286,6 +4286,13 @@ MonoBehaviour:
   upgradeParent: {fileID: 1182809011}
   upgradeUIPrefab: {fileID: 4589541084902698057, guid: 6288bd40f8e6404429c90a73996dddf2,
     type: 3}
+  usedEyesPlaceholders:
+  - {fileID: 1487466880}
+  - {fileID: 890183231}
+  - {fileID: 769510327}
+  - {fileID: 2101833859}
+  - {fileID: 845365322}
+  - {fileID: 569200277}
 --- !u!1 &1021893944
 GameObject:
   m_ObjectHideFlags: 0

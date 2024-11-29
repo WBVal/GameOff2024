@@ -17,16 +17,24 @@ namespace Gameplay.Upgrade
 		Transform upgradeParent;
 		[SerializeField]
 		UpgradeUI upgradeUIPrefab;
+		[SerializeField]
+		GameObject[] usedEyesPlaceholders;
 
 		ScriptableUpgrade[] upgrades;
 		List<UpgradeUI> upgradeUIList;
+		int currentUsedEyes;
+		int maxUsedEyes;
 
 		private ScriptablePlayerStats playerStats;
 		private void Awake()
 		{
+			currentUsedEyes = 0;
+			maxUsedEyes = usedEyesPlaceholders.Length;
+
 			upgradeUIList = new List<UpgradeUI>();
 			upgrades = PlayerStatsManager.Instance.PlayerStats.Upgrades;
 			playerStats = PlayerStatsManager.Instance.PlayerStats;
+
 			foreach(ScriptableUpgrade upgrade in upgrades)
 			{
 				UpgradeUI upgradeUI = Instantiate(upgradeUIPrefab, upgradeParent);
@@ -40,6 +48,7 @@ namespace Gameplay.Upgrade
 				{
 					upgradeUI.Title = upgrade.Title + " (equipped)";
 					upgradeUI.IsAvailable = false;
+					currentUsedEyes += upgrade.Cost;
 				}
 				else
 				{
@@ -56,6 +65,7 @@ namespace Gameplay.Upgrade
 					if (tempUI.IsSelected)
 					{
 						playerStats.EyesCount -= tempUpgrade.Cost;
+						currentUsedEyes += tempUpgrade.Cost;
 						upgradeUI.Title = upgrade.Title + " (equipped)";
 						tempUpgrade.IsUsed = true;
 						tempUpgrade.Apply();
@@ -63,11 +73,13 @@ namespace Gameplay.Upgrade
 					else
 					{
 						playerStats.EyesCount += tempUpgrade.Cost;
+						currentUsedEyes -= tempUpgrade.Cost;
 						upgradeUI.Title = upgrade.Title;
 						tempUpgrade.IsUsed = false;
 						tempUpgrade.Disable();
 					}
 					UpdateUpgradeListDisplay();
+					UpdateUsedEyes();
 				});
 				tempUI.CompatibilityCheck += (() =>
 				{
@@ -76,6 +88,7 @@ namespace Gameplay.Upgrade
 				upgradeUIList.Add(upgradeUI);
 			}
 			UpdateUpgradeListDisplay();
+			UpdateUsedEyes();
 		}
 
 		public void UpdateUpgradeListDisplay()
@@ -83,8 +96,20 @@ namespace Gameplay.Upgrade
 			availableEyes.text = playerStats.EyesCount.ToString();
 			foreach(UpgradeUI upgradeUI in upgradeUIList)
 			{
-				upgradeUI.IsAvailable = (Int32.Parse(upgradeUI.Cost) <= playerStats.EyesCount) && (upgradeUI.CompatibilityCheck());
+				upgradeUI.IsAvailable = (Int32.Parse(upgradeUI.Cost) <= Math.Min(playerStats.EyesCount, maxUsedEyes - currentUsedEyes)) && (upgradeUI.CompatibilityCheck());
 				upgradeUI.UpdateDisplay();
+			}
+		}
+
+		private void UpdateUsedEyes()
+		{
+			foreach(GameObject eyes in usedEyesPlaceholders)
+			{
+				eyes.SetActive(false);
+			}
+			for(int i=0; i<currentUsedEyes; i++)
+			{
+				usedEyesPlaceholders[i].SetActive(true);
 			}
 		}
 	}

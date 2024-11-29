@@ -71,14 +71,14 @@ namespace Gameplay.Player
 				upgrade.IsUsed = false;
 			}
 
-			EyesCount = 99;
+			EyesCount = 0;
 
 			SpeedFactor = 1.0f;
 			DetectionSpeed = 1.0f;
 			NpcForgiveness = false;
 			FreeClue = false;
 
-			BestGhostRunTime = float.MaxValue;
+			BestStandardRunTime = float.MaxValue;
 			BestGhostRunTime = float.MaxValue;
 			BestLuckyRunTime = float.MaxValue;
 			BestNoPowerRunTime = float.MaxValue;
