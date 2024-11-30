@@ -61,6 +61,7 @@ namespace Gameplay.Player
 			inputs.Player.Crouch.started += OnCrouch;
 			inputs.Player.Interact.started += OnInteract;
 
+			inputs.Player.Notes.performed += OnNote;
 			inputs.Player.Pause.performed += OnPause;
 
 			inputs.Player.Enable();
@@ -82,6 +83,7 @@ namespace Gameplay.Player
 			inputs.Player.Crouch.started -= OnCrouch;
 			inputs.Player.Interact.started -= OnInteract;
 
+			inputs.Player.Notes.performed -= OnNote;
 			inputs.Player.Pause.performed -= OnPause;
 		}
 
@@ -227,7 +229,7 @@ namespace Gameplay.Player
 
 		private void OnNote(InputAction.CallbackContext ctx)
 		{
-
+			HudManager.Instance.ShowNotebook();
 		}
 
 		private void OnPause(InputAction.CallbackContext ctx)

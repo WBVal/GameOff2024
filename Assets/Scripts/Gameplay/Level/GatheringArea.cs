@@ -1,3 +1,4 @@
+using Audio;
 using Gameplay.Player;
 using Managers;
 using System.Collections;
@@ -8,11 +9,17 @@ namespace Gameplay.Level
 {
     public class GatheringArea : SpawnArea
 	{
+		[Header("Clue")]
 		[SerializeField]
 		ClueDisplay clueDisplay;
 		[SerializeField]
 		float clueLoadingTime;
 
+		[Header("Audio")]
+		[SerializeField]
+		CustomAudioSource whisperAudioSource;
+		[SerializeField]
+		CustomAudioSource caughtAudioSource;
 		public enum ClueState
 		{
 			HIDDEN,
@@ -68,6 +75,8 @@ namespace Gameplay.Level
 			PlayerStatsManager.Instance.IsLucky = false;
 			currentState = ClueState.REVEALED;
 			clueDisplay.DisplayClue(clue);
+			whisperAudioSource.Mute(false);
+			whisperAudioSource.PlaySound();
 		}
 
 		private IEnumerator LoadClueCoroutine()
@@ -95,6 +104,8 @@ namespace Gameplay.Level
 				StopCoroutine(loadCoroutine);
 			}
 			clueDisplay.LockClue();
+			whisperAudioSource.Mute(true);
+			caughtAudioSource.PlaySound();
 		}
 	}
 }

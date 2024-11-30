@@ -26,6 +26,9 @@ namespace Managers
 		HudDetectionUI hudDetection;
 
 		[SerializeField]
+		NotebookUI notebookUI;
+
+		[SerializeField]
 		EndScreen endScreen;
 
 		[SerializeField]
@@ -126,6 +129,14 @@ namespace Managers
 
 			interactionHelper.gameObject.SetActive(true);
 			interactionHelper.Helper = helperText;
+		}
+
+		public void ShowNotebook()
+		{
+			if (notebookUI == null) return;
+
+			notebookUI.gameObject.SetActive(true);
+			CurrentWindow = notebookUI.gameObject;
 		}
 	}
 }

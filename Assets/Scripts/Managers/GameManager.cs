@@ -1,3 +1,4 @@
+using Audio;
 using DG.Tweening;
 using Gameplay.Level;
 using Gameplay.Player;
@@ -30,6 +31,8 @@ namespace Managers
 		[SerializeField]
 		RunTimer timer;
 
+		Npc target;
+		public Npc Target { get => target; set => target = value; }
 
 		float currentTimeScale;
 		public float CurrentTimeScale { get=>currentTimeScale; set => currentTimeScale = value; }
@@ -42,7 +45,8 @@ namespace Managers
 		private void Start()
 		{
 			if (isLobby) return;
-
+			
+			PlayerStatsManager.Instance.InitCheats();
 			timer.StartTimer();
 		}
 
@@ -69,6 +73,9 @@ namespace Managers
                 t.GetComponent<Npc>().Scare();
             }
 			levelGenerator.DisableClues();
+
+			if (policeman == null) return;
+
 			HudManager.Instance.Message("The policeman knows where you are.");
 			policeman.StartChasing();
         }
@@ -82,7 +89,7 @@ namespace Managers
 
         public void OnEndAreaEnter()
 		{
-			policeman.Stop();
+			policeman?.Stop();
 			DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0f, 1f);
             Player.DisableInputs();
 			HudManager.Instance.HideTimer();
@@ -124,6 +131,7 @@ namespace Managers
 				yield return null;
 			}
 			callback?.Invoke();
+			AudioManager.Instance.StopMusic();
 		}
 
 		#region Timer

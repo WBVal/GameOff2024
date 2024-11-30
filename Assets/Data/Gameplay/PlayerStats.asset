@@ -18,6 +18,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4076a2d3c64833b4e8b559e25fbdf701, type: 2}
   - {fileID: 11400000, guid: 80721c8ea2954854b8a0f9de2c572fa3, type: 2}
   - {fileID: 11400000, guid: 9f640919d6aaf3c4e888bb279e4f4c63, type: 2}
+  Cheats:
+  - {fileID: 11400000, guid: edfe0f8ba861e2342b5cd13d09437ce2, type: 2}
+  - {fileID: 11400000, guid: d44907ce97d98724894d35f9fd87486e, type: 2}
+  - {fileID: 11400000, guid: 978bdbc6f7145e34282fdc51b78e7e47, type: 2}
   EyesCount: 6
   SpeedFactor: 1.2
   DetectionSpeed: 0.3

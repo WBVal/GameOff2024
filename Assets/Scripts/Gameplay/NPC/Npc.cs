@@ -28,9 +28,18 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 			GetComponent<NpcAttributesDisplay>().InitAttributes(attributes);
 		}
 	}
+	[Header("Cheat")]
+	[SerializeField]
+	GameObject targetIndicator;
 
 	private Action onPlayerDetected;
 	public Action OnPlayerDetected { get => onPlayerDetected; set => onPlayerDetected = value; }
+
+	public bool ShowIndicator
+	{
+		get { return targetIndicator.activeSelf; }
+		set { targetIndicator.SetActive(value); }
+	}
 
 	private bool isTarget;
 	public bool IsTarget

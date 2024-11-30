@@ -16,9 +16,15 @@ namespace Audio
         [SerializeField]
         AudioSource musicSource;
         [SerializeField]
+        bool hasIntro;
+		[SerializeField]
+		AudioClip musicIntro;
+		[SerializeField]
         AudioClip musicloop;
+		[SerializeField]
+		AudioClip musicChase;
 
-        [SerializeField]
+		[SerializeField]
         List<AudioSource> pausableAudioSources = new List<AudioSource>();
         #endregion
 
@@ -58,6 +64,8 @@ namespace Audio
             }
 
         }
+
+        Coroutine introCoroutine;
         #endregion
 
         #region MonoBehaviour Methods
@@ -71,8 +79,15 @@ namespace Audio
         {
             LoadVolume();
 
-            musicSource.clip = musicloop;
-            musicSource.Play();
+            if (hasIntro)
+            {
+                introCoroutine = StartCoroutine(PlayMusicWithIntro());
+            }
+            else
+			{
+				musicSource.clip = musicloop;
+				musicSource.Play();
+			}
         }
         #endregion
 
@@ -87,10 +102,20 @@ namespace Audio
         {
             return Mathf.Log10(input) * 20f;
         }
-        #endregion
+		IEnumerator PlayMusicWithIntro()
+		{
+			musicSource.clip = musicIntro;
+			musicSource.loop = false;
+			musicSource.Play();
+			yield return new WaitForSecondsRealtime(31.65f);
+			musicSource.clip = musicloop;
+			musicSource.loop = true;
+			musicSource.Play();
+		}
+		#endregion
 
-        #region Public Methods
-        public void PlaySources()
+		#region Public Methods
+		public void PlaySources()
         {
             foreach (AudioSource source in pausableAudioSources)
             {
@@ -103,6 +128,21 @@ namespace Audio
             {
                 source.Pause();
             }
+		}
+		public void StopMusic()
+		{
+            if(introCoroutine != null)
+                StopCoroutine(introCoroutine);
+
+            musicSource.Stop();
+		}
+
+		public void PlayChaseMusic()
+        {
+            musicSource.clip = musicChase;
+            musicSource.loop = true;
+            musicSource.Play();
+
         }
         #endregion
 

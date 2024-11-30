@@ -1,3 +1,4 @@
+using Gameplay.Cheat;
 using Gameplay.Upgrade;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ namespace Gameplay.Player
 	public class ScriptablePlayerStats : ScriptableObject
 	{
 		public ScriptableUpgrade[] Upgrades;
+
+		public ScriptableCheatCode[] Cheats;
 
 		public int EyesCount = 0;
 

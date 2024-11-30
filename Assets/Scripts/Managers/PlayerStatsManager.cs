@@ -26,6 +26,15 @@ namespace Managers
 		bool isCheating = false;
 		public bool IsCheating { get { return isCheating; } set { isCheating = value; } }
 
+		[Header("Cheat")]
+		[SerializeField]
+		bool cheatEnabled;
+		[SerializeField]
+		bool seeTarget;
+		[SerializeField]
+		bool canBeDetected;
+		[SerializeField]
+		bool noPolice;
 
 
 		private void Awake()
@@ -33,6 +42,15 @@ namespace Managers
 			playerStats.Init();
 
 			DontDestroyOnLoad(this);
+		}
+
+		private void Start()
+		{
+			if (cheatEnabled)
+			{
+				GameManager.Instance.Target.ShowIndicator = seeTarget;
+				GameManager.Instance.Player.CanBeDetected = canBeDetected;
+			}
 		}
 
 		[ContextMenu("AddEye")]
@@ -73,6 +91,37 @@ namespace Managers
 			isGhost = true;
 			isNoPower = true;
 			isCheating = false;
+		}
+
+		public void InitCheats()
+		{
+			seeTarget = false;
+			noPolice = false;
+			canBeDetected = true;
+			GameManager.Instance.Target.ShowIndicator = seeTarget;
+			GameManager.Instance.Player.CanBeDetected = canBeDetected;
+		}
+
+		public void CheatDetection()
+		{
+			isCheating = true;
+			GameManager.Instance.Player.CanBeDetected = false;
+			HudManager.Instance.Message("Cheat Code: you cannot be detected");
+		}
+		public void CheatSeeTarget()
+		{
+			isCheating = true;
+			GameManager.Instance.Target.ShowIndicator = true;
+			HudManager.Instance.Message("Cheat Code: Eye bearer is visible");
+		}
+
+		[ContextMenu("NoPolice")]
+		public void CheatNoPolice()
+		{
+			isCheating = true;
+			noPolice = true;
+			Destroy(GameManager.Instance.Policeman.gameObject);
+			HudManager.Instance.Message("Cheat Code: the policeman is gone");
 		}
 	}
 }

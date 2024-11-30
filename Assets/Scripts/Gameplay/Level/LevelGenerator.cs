@@ -119,6 +119,7 @@ namespace Gameplay.Level
 			int randomNpcIndex = Random.Range(0, npcList.Count);
 			npcList[randomNpcIndex].Attributes = targetAttributes.ToArray();
 			npcList[randomNpcIndex].IsTarget = true;
+			GameManager.Instance.Target = npcList[randomNpcIndex];
 			npcList.RemoveAt(randomNpcIndex);
 
 			// Give other Npcs attributes
