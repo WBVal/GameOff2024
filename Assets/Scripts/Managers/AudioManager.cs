@@ -41,7 +41,6 @@ namespace Audio
 		#region Variables
 		const string MUSIC_MIXER = "MusicVolume";
         const string SFX_MIXER = "SFXVolume";
-        const string LOWPASS_FREQUENCY_MIXER = "MusicLowPass";
 
         public const string MUSIC_KEY = "MusicVolume";
         public const string SFX_KEY = "SFXVolume";

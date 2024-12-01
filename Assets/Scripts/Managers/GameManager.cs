@@ -79,7 +79,6 @@ namespace Managers
 			if (policeman == null) return;
 
 			HudManager.Instance.Message("The policeman knows where you are.");
-			AudioManager.Instance.PlayTrackingSound();
 			policeman.StartChasing();
         }
 
