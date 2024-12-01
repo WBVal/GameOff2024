@@ -8,16 +8,31 @@ using Utils;
 
 namespace Managers
 {
-    public class SceneFlowManager : Singleton<SceneFlowManager>
+	public class SceneFlowManager : Singleton<SceneFlowManager>
 	{
 		[SerializeField]
 		LoadingScreen loadingScreenPrefab;
 
 		[SerializeField]
-        string firstScene;
+		string firstScene;
 
 		string currentScene;
 		Coroutine loadSceneCoroutine;
+
+		float globalMusicVolume = 1f;
+		public float GlobalMusicVolume { get => globalMusicVolume; set => globalMusicVolume = value; }
+		float globalSfxVolume = 1f;
+		public float GlobalSfxVolume { get => globalSfxVolume; set => globalSfxVolume = value; }
+		float sensitivity = 10f;
+		public float Sensitivity 
+		{ 
+			get => sensitivity;
+			set
+			{
+				sensitivity = value;
+				GameManager.Instance.Player.SetSens(sensitivity);
+			} 
+		}
 
 		private void Awake()
 		{

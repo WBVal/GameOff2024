@@ -54,11 +54,12 @@ namespace Gameplay.Player
 		Vector3 camCenter = new Vector3(0.5f, 0.5f, 0f);
 
 		PlayerController playerController;
-
+		PlayerCamera playerCamera;
 		private void Awake()
 		{
 			mainCam = Camera.main;
 			playerController = GetComponent<PlayerController>();
+			playerCamera = GetComponent<PlayerCamera>();
 		}
 
 		private void Update()
@@ -104,6 +105,12 @@ namespace Gameplay.Player
 		public void Killed()
 		{
 			playerController.OnKilled();
+		}
+
+		public void SetSens(float sens)
+		{
+			playerCamera.SensX = sens;
+			playerCamera.SensY = sens;
 		}
 	}
 }

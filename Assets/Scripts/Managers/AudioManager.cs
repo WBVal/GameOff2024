@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using System.Threading.Tasks;
 using Utils;
+using Managers;
 
 namespace Audio
 {
@@ -107,12 +108,20 @@ namespace Audio
 				musicSource.Play();
 			}
         }
-        #endregion
 
-        #region Private Methods
-        private void LoadVolume()
+		private void OnDisable()
+		{
+			SceneFlowManager.Instance.GlobalMusicVolume = musicVolume;
+            SceneFlowManager.Instance.GlobalSfxVolume = sfxVolume;
+		}
+		#endregion
+
+		#region Private Methods
+		private void LoadVolume()
         {
-            audioMixer.SetFloat(MUSIC_MIXER, ConvertToLog(musicVolume));
+            musicVolume = SceneFlowManager.Instance.GlobalMusicVolume;
+			sfxVolume = SceneFlowManager.Instance.GlobalSfxVolume;
+			audioMixer.SetFloat(MUSIC_MIXER, ConvertToLog(musicVolume));
             audioMixer.SetFloat(SFX_MIXER, ConvertToLog(sfxVolume));
         }
 

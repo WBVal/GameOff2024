@@ -1,5 +1,6 @@
 using Cinemachine;
 using DG.Tweening;
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,8 +18,10 @@ namespace Gameplay.Player
 		[Header("Parameters")]
 		[SerializeField]
 		float sensX;
+		public float SensX { get => sensX; set=>sensX=value; }
 		[SerializeField]
 		float sensY;
+		public float SensY { get => sensY; set => sensY = value; }
 		[SerializeField]
 		float peakAmplitude;
 		[Header("FOV FX")]
@@ -57,6 +60,8 @@ namespace Gameplay.Player
 		{
 			cameraTransform = m_Camera.transform;
 			m_Camera.m_Lens.FieldOfView = baseFOV;
+			sensX = SceneFlowManager.Instance.Sensitivity;
+			sensY = SceneFlowManager.Instance.Sensitivity;
 			volume.profile.TryGet<Vignette>(out vignette);
 			offset = m_Camera.GetComponent<CinemachineCameraOffset>();
 			recomposer = m_Camera.GetComponent<CinemachineRecomposer>();
@@ -68,6 +73,11 @@ namespace Gameplay.Player
 			canMove = true;
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
+		}
+
+		private void OnDisable()
+		{
+			SceneFlowManager.Instance.Sensitivity = sensX;
 		}
 
 		// Update is called once per frame
