@@ -1,7 +1,9 @@
+using Audio;
 using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Gameplay.Cheat
 {
@@ -10,6 +12,7 @@ namespace Gameplay.Cheat
 	{
 		public override void Apply()
 		{
+			base.Apply();
 			PlayerStatsManager.Instance.CheatDetection();
 		}
 	}

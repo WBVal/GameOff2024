@@ -1,3 +1,4 @@
+using Audio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,11 @@ namespace Gameplay.Upgrade
 		public bool IsUsed { get => isUsed; set => isUsed = value; }
 
 		public virtual bool CheckCompatibility() {  return true; }
-		public virtual void Apply() { }
+		public virtual void Apply()
+		{
+			if (AudioManager.Instance != null)
+				AudioManager.Instance.PlayUpgradeSound();
+		}
 		public virtual void Disable() { }
     }
 }

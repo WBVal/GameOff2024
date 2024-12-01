@@ -26,10 +26,20 @@ namespace Audio
 
 		[SerializeField]
         List<AudioSource> pausableAudioSources = new List<AudioSource>();
-        #endregion
 
-        #region Variables
-        const string MUSIC_MIXER = "MusicVolume";
+        [Header("Specific sources")]
+        [SerializeField]
+        AudioSource cheatSource;
+		[SerializeField]
+		AudioSource upgradeSource;
+		[SerializeField]
+		AudioSource trackingSource;
+		[SerializeField]
+		AudioSource detectionSource;
+		#endregion
+
+		#region Variables
+		const string MUSIC_MIXER = "MusicVolume";
         const string SFX_MIXER = "SFXVolume";
         const string LOWPASS_FREQUENCY_MIXER = "MusicLowPass";
 
@@ -73,7 +83,16 @@ namespace Audio
         private void Awake()
         {
             DontDestroyOnLoad(this);
-        }
+
+            if(cheatSource != null)
+                pausableAudioSources.Add(cheatSource);
+			if (upgradeSource != null)
+				pausableAudioSources.Add(upgradeSource);
+			if (trackingSource != null)
+				pausableAudioSources.Add(trackingSource);
+			if (detectionSource != null)
+				pausableAudioSources.Add(detectionSource);
+		}
 
         private void Start()
         {
@@ -144,7 +163,27 @@ namespace Audio
             musicSource.Play();
 
         }
-        #endregion
+		#endregion
 
-    }
+		#region Play Specific Audio methods
+		public void PlayCheatSound()
+        {
+            cheatSource.Play();
+
+		}
+		public void PlayUpgradeSound()
+		{
+			upgradeSource.Play();
+
+		}
+        public void PlayTrackingSound()
+        {
+            trackingSource.Play();
+		}
+		public void PlayDetectionSound()
+		{
+			detectionSource.Play();
+		}
+		#endregion
+	}
 }

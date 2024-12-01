@@ -11,6 +11,9 @@ namespace UI
     public class NotebookUI : MonoBehaviour
 	{
 		[SerializeField]
+		bool isEnabled;
+
+		[SerializeField]
 		TMP_InputField inputField;
 
 		ScriptablePlayerStats stats;
@@ -33,7 +36,9 @@ namespace UI
 
 		private void CheckWords(string content)
 		{
-			foreach(ScriptableCheatCode cheat in stats.Cheats)
+			if (!isEnabled) return;
+
+			foreach (ScriptableCheatCode cheat in stats.Cheats)
 			{
 				if (StringUtility.ContainsWord(content, cheat.Code))
 				{

@@ -14,6 +14,7 @@ namespace Gameplay.Upgrade
 
 		public override void Apply()
 		{
+			base.Apply();
 			if (PlayerStatsManager.Instance != null)
 			{
 				PlayerStatsManager.Instance.PlayerStats.DetectionSpeed = detectionFactor;

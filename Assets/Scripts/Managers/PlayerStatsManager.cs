@@ -118,6 +118,7 @@ namespace Managers
 		[ContextMenu("NoPolice")]
 		public void CheatNoPolice()
 		{
+			if (noPolice) return;
 			isCheating = true;
 			noPolice = true;
 			Destroy(GameManager.Instance.Policeman.gameObject);

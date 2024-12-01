@@ -1,3 +1,4 @@
+using Audio;
 using Gameplay.Player;
 using Gameplay.Stealth;
 using Managers;
@@ -150,6 +151,7 @@ public class Policeman : DetectionBehaviour
 	[ContextMenu("StartChase")]
 	public void StartChasing()
 	{
+		AudioManager.Instance.PlayTrackingSound();
 		agent.enabled = true;
 		currentState = State.CHASE;
 		StartCoroutine(ChaseAccelerationCoroutine());

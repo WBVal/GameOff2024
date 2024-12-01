@@ -10,6 +10,7 @@ namespace Gameplay.Cheat
 	{
 		public override void Apply()
 		{
+			base.Apply();
 			PlayerStatsManager.Instance.CheatSeeTarget();
 		}
 	}

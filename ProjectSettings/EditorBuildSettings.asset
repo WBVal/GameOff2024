@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level - Train Station.unity
     guid: 02e9cc3affe6a5342b7cf7560d3c7d48
+  - enabled: 1
+    path: Assets/Scenes/Tutorial Scene.unity
+    guid: fa4200cb616e64643b4e1a6cedba14e7
   m_configObjects: {}

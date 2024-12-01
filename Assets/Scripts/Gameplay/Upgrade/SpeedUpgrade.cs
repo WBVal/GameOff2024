@@ -18,7 +18,8 @@ namespace Gameplay.Upgrade
 
 		public override void Apply()
 		{
-			if(PlayerStatsManager.Instance != null)
+			base.Apply();
+			if (PlayerStatsManager.Instance != null)
 			{
 				PlayerStatsManager.Instance.PlayerStats.SpeedFactor = speedFactor;
 			}

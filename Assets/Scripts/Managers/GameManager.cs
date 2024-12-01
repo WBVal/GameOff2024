@@ -16,6 +16,8 @@ namespace Managers
 	{
 		[SerializeField]
 		bool isLobby;
+		[SerializeField]
+		bool isTuto;
 
 		[SerializeField]
         LevelGenerator levelGenerator;
@@ -44,7 +46,7 @@ namespace Managers
 
 		private void Start()
 		{
-			if (isLobby) return;
+			if (isLobby || isTuto) return;
 			
 			PlayerStatsManager.Instance.InitCheats();
 			timer.StartTimer();
@@ -59,16 +61,16 @@ namespace Managers
             Time.timeScale = isPaused ? 0 : currentTimeScale;
             HudManager.Instance.Pause(isPaused);
 			Cursor.lockState = isPaused ? CursorLockMode.Confined : CursorLockMode.Locked;
-			Cursor.visible = !isPaused;
+			Cursor.visible = isPaused;
 		}
 
         public void OnExecute()
         {
             player.OnExecuteEnd();
-            // Eye + 1
-            // Policeman starts searching
-            // Every npc is scared
-            foreach(Transform t in levelGenerator.NpcSpawnParent)
+
+			if (isTuto) return;
+
+			foreach (Transform t in levelGenerator.NpcSpawnParent)
             {
                 t.GetComponent<Npc>().Scare();
             }
@@ -77,12 +79,15 @@ namespace Managers
 			if (policeman == null) return;
 
 			HudManager.Instance.Message("The policeman knows where you are.");
+			AudioManager.Instance.PlayTrackingSound();
 			policeman.StartChasing();
         }
 
         public void OnMissExecute()
         {
-            Time.timeScale = 0;
+			if(isTuto) return;
+
+			Time.timeScale = 0;
             player.DisableInputs();
 			HudManager.Instance.OnMissExecute();
         }
@@ -92,11 +97,14 @@ namespace Managers
 			policeman?.Stop();
 			DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0f, 1f);
             Player.DisableInputs();
-			HudManager.Instance.HideTimer();
-			endTime = timer.GetTimeRaw();
-			PlayerStatsManager.Instance.PublishTime(endTime);
-			HudManager.Instance.OnVictory();
-			PlayerStatsManager.Instance.AddEye();
+			if (!isTuto)
+			{
+				HudManager.Instance.HideTimer();
+				endTime = timer.GetTimeRaw();
+				PlayerStatsManager.Instance.PublishTime(endTime);
+				HudManager.Instance.OnVictory();
+				PlayerStatsManager.Instance.AddEye();
+			}
 
 			StartCoroutine(EndCoroutine(() => { HudManager.Instance.OnVictory(); }));
 		}

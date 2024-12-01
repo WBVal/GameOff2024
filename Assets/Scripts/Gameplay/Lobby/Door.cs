@@ -15,7 +15,7 @@ namespace Gameplay.Lobby
 
 		public void ShowHelper()
 		{
-			HudManager.Instance.ShowHelper("Open Door");
+			HudManager.Instance.ShowHelper("Go outside");
 		}
 	}
 }

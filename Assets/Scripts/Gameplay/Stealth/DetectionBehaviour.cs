@@ -1,3 +1,4 @@
+using Audio;
 using Gameplay.Player;
 using Gameplay.Stealth;
 using Managers;
@@ -83,6 +84,7 @@ public class DetectionBehaviour : MonoBehaviour
 	{
 		if (!player.CanBeDetected) return;
 
+		AudioManager.Instance.PlayDetectionSound();
 		PlayerStatsManager.Instance.IsGhost = false;
 		playerDetected = true;
 		spotlight.color = Color.red;
