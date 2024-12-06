@@ -88,6 +88,7 @@ namespace Gameplay.Player
 
 		public void Execute(Npc npc)
 		{
+			canBeDetected = false;
 			playerController.Execute(npc);
 		}
 
