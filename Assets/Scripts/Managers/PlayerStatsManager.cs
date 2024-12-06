@@ -61,27 +61,11 @@ namespace Managers
 
 		public void PublishTime(float time)
 		{
-			if (isCheating)
-			{
-				playerStats.AddToLuckyRun(time);
-				isLucky = true;
-				isGhost = true;
-				isNoPower = true;
-				isCheating = false;
-				return;
-			}
-
 			playerStats.AddToStandardRun(time);
 
-			if (isLucky)
-			{
-				playerStats.AddToLuckyRun(time);
-				isLucky = true;
-				isGhost = true;
-				isNoPower = true;
-				isCheating = false;
-				return;
-			}
+			if (isCheating) playerStats.AddCheaterRun(time);
+
+			if (isLucky) playerStats.AddToLuckyRun(time);
 
 			if (isGhost) playerStats.AddToGhostRun(time);
 
