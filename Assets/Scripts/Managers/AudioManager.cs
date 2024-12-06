@@ -176,21 +176,21 @@ namespace Audio
 		#region Play Specific Audio methods
 		public void PlayCheatSound()
         {
-            cheatSource.Play();
+            cheatSource?.Play();
 
 		}
 		public void PlayUpgradeSound()
 		{
-			upgradeSource.Play();
+			upgradeSource?.Play();
 
 		}
         public void PlayTrackingSound()
         {
-            trackingSource.Play();
+            trackingSource?.Play();
 		}
 		public void PlayDetectionSound()
 		{
-			detectionSource.Play();
+			detectionSource?.Play();
 		}
 		#endregion
 	}

@@ -125,6 +125,7 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 
 	public void OnExecuteEnd()
 	{
+		GetComponent<Collider>().enabled = false;
 		if (isTarget)
 		{
 			// Eye collected -> go back to base
@@ -142,6 +143,7 @@ public class Npc : DetectionBehaviour, IFpsInteractable
 
 	public void Scare()
 	{
+		GetComponent<Collider>().enabled = false;
 		if (!isDead)
 			animationController.Scared();
 	}

@@ -1,6 +1,7 @@
 using Managers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using Utils;
 
@@ -52,6 +53,7 @@ namespace Gameplay.Player
 		RaycastHit hit;
 		Camera mainCam;
 		Vector3 camCenter = new Vector3(0.5f, 0.5f, 0f);
+		bool isExecuting;
 
 		PlayerController playerController;
 		PlayerCamera playerCamera;
@@ -75,6 +77,7 @@ namespace Gameplay.Player
 			}
 			else
 			{
+				playerTarget = null;
 				HudManager.Instance.CrossHairInteract(false);
 				HudManager.Instance.ShowHelper(string.Empty);
 			}
@@ -88,12 +91,16 @@ namespace Gameplay.Player
 
 		public void Execute(Npc npc)
 		{
+			if (isExecuting) return;
+
+            isExecuting = true;
 			canBeDetected = false;
 			playerController.Execute(npc);
 		}
 
 		public void OnExecuteEnd()
 		{
+			isExecuting = false;
 			playerController.OnExecuteEnd();
 			hasEye = true;
 		}
